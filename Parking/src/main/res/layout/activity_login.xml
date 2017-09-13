@@ -1,17 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     tools:context="com.nttdata.parkingmobile.LoginActivity">
 
 
-    <TextView
-        android:id="@+id/textView"
+    <EditText
+        android:id="@+id/username"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="Hello world!" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="71dp"
+        android:ems="10"
+        android:hint ="Username"
+        android:focusable = "true"
+        android:inputType="textPersonName"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint ="Password"
+        android:focusable = "true"
+        android:inputType="textPassword"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/username"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignStart="@+id/username" />
+
+    <Button
+        android:id="@+id/btnSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="98dp"
+        android:text="Sign In"
+        android:layout_below="@+id/password"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_alignBaseline="@+id/btnSignIn"
+        android:layout_alignBottom="@+id/btnSignIn"
+        android:layout_alignRight="@+id/password"
+        android:layout_alignEnd="@+id/password" />
+
+    <CheckBox
+        android:id="@+id/rememberMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnCancel"
+        android:layout_alignLeft="@+id/btnSignIn"
+        android:layout_alignStart="@+id/btnSignIn"
+        android:layout_marginBottom="38dp"
+        android:text="Remember me" />
+</RelativeLayout>
