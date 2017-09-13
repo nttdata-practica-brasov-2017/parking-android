@@ -5,26 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import manager.DataManager;
 import model.Assignment;
-import model.Spot;
 import model.User;
-import webservice.WSlogin;
+import webservice.LoginDelegate;
+import webservice.LoginTask;
 
-public class LoginActivity extends Activity {
-
-    //final Context context = this;
-    //private String TAG = "LoginActivity";
+public class LoginActivity extends Activity implements LoginDelegate{
 
     private Button btnSignIn;
     private Button btnCancel;
@@ -35,11 +29,14 @@ public class LoginActivity extends Activity {
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
+    LoginActivity loginActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        loginActivity = this;
 
         DataManager.getInstance().getUserList();
         DataManager.getInstance().getSpotList();
@@ -52,9 +49,6 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 username = editTextUsername.getText().toString();
                 password = editTextPassword.getText().toString();
-
-                WSlogin wslogin = new WSlogin(username, password);
-                wslogin.execute();
 
                 if (checkCredentials(username, password) == true) {
                     if (checkBox_RememberMe.isChecked()) {
@@ -79,6 +73,9 @@ public class LoginActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_SHORT).show();
                     }
                 }
+                //Log.i(TAG,"USERNAME: "+username);
+                LoginTask loginTask = new LoginTask(username, password);
+                loginTask.setDelegate(loginActivity);
             }
         });
 
@@ -150,4 +147,8 @@ public class LoginActivity extends Activity {
     }
 
 
+    @Override
+    public void onLoginDone(String result) {
+        Log.d("TAG" , "LOGIN DONE DELEGATE " + result);
+    }
 }

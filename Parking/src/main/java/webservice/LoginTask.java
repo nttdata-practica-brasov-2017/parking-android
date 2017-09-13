@@ -20,6 +20,8 @@ public class LoginTask extends AsyncTask<String, String, Boolean> implements Cre
     private String username;
     private String password;
 
+    private LoginDelegate delegate;
+
     @Override
     protected Boolean doInBackground(String... params) {
         try {
@@ -61,8 +63,20 @@ public class LoginTask extends AsyncTask<String, String, Boolean> implements Cre
 
     @Override
     protected void onPostExecute(Boolean o) {
-        String response = String.valueOf(o);
         super.onPostExecute(o);
+        String response = String.valueOf(o);
 
+        if (delegate != null){
+            delegate.onLoginDone(response);
+        }
+
+    }
+
+    public LoginDelegate getDelegate() {
+        return delegate;
+    }
+
+    public void setDelegate(LoginDelegate delegate) {
+        this.delegate = delegate;
     }
 }
