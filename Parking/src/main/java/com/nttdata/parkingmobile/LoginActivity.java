@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import java.util.List;
 import manager.DataManager;
@@ -31,6 +32,8 @@ public class LoginActivity extends Activity implements LoginDelegate{
     private Boolean saveLogin;
     LoginActivity loginActivity;
 
+    ProgressBar progressBarSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +46,15 @@ public class LoginActivity extends Activity implements LoginDelegate{
         DataManager.getInstance().getAssignmentList();
 
         getLoginPreferences();
+        progressBarSpinner=(ProgressBar)findViewById(R.id.progressBar);
+        progressBarSpinner.setVisibility(View.GONE);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                progressBarSpinner.setVisibility(View.VISIBLE);
+
                 username = editTextUsername.getText().toString();
                 password = editTextPassword.getText().toString();
 

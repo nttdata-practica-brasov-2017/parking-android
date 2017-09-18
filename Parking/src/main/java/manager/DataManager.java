@@ -2,7 +2,14 @@ package manager;
 
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import model.Assignment;
@@ -73,6 +80,12 @@ public class DataManager {
         userList.add(new User("user5", "user5", "user5", "user5", false));
         userList.add(new User("user6", "user6", "user6", "user6", false));
         userList.add(new User("user7", "user7", "user7", "user7", false));
+        userList.add(new User("user8", "user8", "user8", "user8", false));
+        userList.add(new User("user9", "user9", "user9", "user9", false));
+        userList.add(new User("user10", "user10", "user10", "user10", false));
+        userList.add(new User("user11", "user11", "user11", "user11", false));
+        userList.add(new User("user12", "user12", "user12", "user12", false));
+
     }
 
     private void createAssignmentList() {
@@ -81,6 +94,10 @@ public class DataManager {
         assignmentList.add(new Assignment("user1", 2));
         assignmentList.add(new Assignment("user2", 3));
         assignmentList.add(new Assignment("user3", 4));
+        assignmentList.add(new Assignment("user4", 5));
+        assignmentList.add(new Assignment("user5", 6));
+        assignmentList.add(new Assignment("user6", 7));
+        assignmentList.add(new Assignment("user7", 8));
     }
 
     private void createSpotList() {
@@ -107,5 +124,49 @@ public class DataManager {
         spotList.add(new Spot(20, 2));
     }
 
+    public List<Vacancy> parseVacancies(String inputJSON) {
 
+        ArrayList<Vacancy> vacancyList = new ArrayList<Vacancy>();
+
+        try {
+            JSONArray jsonArray = new JSONArray(inputJSON);
+            Log.d("TAG", "JSONArray - " + String.valueOf(jsonArray));
+
+            for (int i=0 ; i<jsonArray.length() ; i++){
+                Vacancy vacancy = new Vacancy();
+
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONObject spotObject = jsonObject.getJSONObject("spot");
+                Log.d("TAG", "JSONObject - " + String.valueOf(jsonObject));
+                Log.d("TAG", "spot - " + String.valueOf(spotObject));
+
+                vacancy.setSpotNumber(spotObject.getInt("number"));
+
+                SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+                Date dateTime = new Date();
+                Date vacatedAtdate = new Date();
+                Date bookedBydate = new Date();
+                try {
+                    dateTime = fmt.parse(String.valueOf(jsonObject.get("date")));
+                    vacatedAtdate = fmt.parse(String.valueOf(jsonObject.get("vacatedAt")));
+                    bookedBydate = fmt.parse(String.valueOf(jsonObject.get("bookedBy")));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                vacancy.setDate(dateTime);
+                vacancy.setDate(vacatedAtdate);
+                vacancy.setDate(bookedBydate);
+
+                //add object to list
+                vacancyList.add(vacancy);
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return vacancyList;
+    }
 }
