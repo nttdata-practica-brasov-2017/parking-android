@@ -210,7 +210,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         listView.setAdapter(adapter);
 
 
-        if (listDate.size() == 0) {
+        if (listDate.size() == 0 && !txtSelectDate.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "There are no other parking spots available on " +
                     txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
 
