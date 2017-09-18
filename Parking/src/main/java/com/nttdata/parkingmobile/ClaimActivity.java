@@ -40,14 +40,13 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     private int mMonth;
     private int mDay;
     private TextView textAvailableSpots;
-    // private Spinner spinnerDate;
     private List<Vacancy> vacancyList;
     private Date dateTime;
     private String username;
-    List<String> listDate;
-    ListView listView;
+    private List<String> listDate;
+    private ListView listView;
     private String selected;
-    ClaimActivity claimActivity;
+    private ClaimActivity claimActivity;
     boolean clickedClaim = false;
 
     @Override
@@ -104,16 +103,10 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        //if (listDate.isEmpty())
-        //  btnClaim.setEnabled(false);
-
-
         btnClaim.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // String selectedItem = spinnerDate.getSelectedItem().toString();
-
                 clickedClaim = true;
                 for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
                     try {
@@ -130,8 +123,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         e.printStackTrace();
                     }
                 addItemsOnListView();
-
-
             }
         });
     }
@@ -139,13 +130,9 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     private void registerClickCallBack() {
 
         //String selectedItem;
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //selected = ((TextView) view.findViewById(R.id.listView)).getText().toString();
-
                 if (!clickedClaim) {
                     selected = listDate.get(position);
                     Toast.makeText(ClaimActivity.this, "You chose: " + selected, Toast.LENGTH_LONG).show();
@@ -154,8 +141,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                             txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     //Date picker
@@ -181,24 +166,18 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
-
-
         }
     }
 
     public void addItemsOnListView() {
-
         btnClaim.setEnabled(true);
-
         listDate = new ArrayList<String>();
-        Integer s;
 
         if (DataManager.getInstance().getVacancyList().size() > 0) {
             for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
                 try {
                     if (vacancyList.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) && vacancyList.getBookedBy().isEmpty()) {
-                        s = new Integer(vacancyList.getSpotNumber());
-                        listDate.add(s.toString());
+                        listDate.add(new Integer(vacancyList.getSpotNumber()).toString());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -208,7 +187,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         //Build adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listDate);
         listView.setAdapter(adapter);
-
 
         if (listDate.size() == 0 && !txtSelectDate.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "There are no other parking spots available on " +
