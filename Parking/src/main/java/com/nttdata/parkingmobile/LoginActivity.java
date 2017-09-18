@@ -25,7 +25,9 @@ public class LoginActivity extends Activity implements LoginDelegate{
     private Button btnCancel;
     private EditText editTextUsername, editTextPassword;
     private CheckBox checkBox_RememberMe;
-    private String username, password;
+    private String username;
+    private String password;
+    private User user;
 
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
@@ -41,13 +43,11 @@ public class LoginActivity extends Activity implements LoginDelegate{
 
         loginActivity = this;
 
-        DataManager.getInstance().getUserList();
-        DataManager.getInstance().getSpotList();
-        DataManager.getInstance().getAssignmentList();
-
         getLoginPreferences();
         progressBarSpinner=(ProgressBar)findViewById(R.id.progressBar);
         progressBarSpinner.setVisibility(View.GONE);
+
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +58,8 @@ public class LoginActivity extends Activity implements LoginDelegate{
                 username = editTextUsername.getText().toString();
                 password = editTextPassword.getText().toString();
 
-                if (checkCredentials(username, password) == true) {
+                // de modificat if true cu result-ul care vine true sau error dupa logare
+                if (true) {
                     if (checkBox_RememberMe.isChecked()) {
                         // remember username and password
                         loginPrefsEditor.putBoolean("saveLogin", true);
@@ -69,7 +70,8 @@ public class LoginActivity extends Activity implements LoginDelegate{
                         loginPrefsEditor.clear();
                         loginPrefsEditor.commit();
                     }
-                    startNewActivity();
+                    LoginTask loginTask = new LoginTask(username, password);
+                    loginTask.setLoginDelegate(loginActivity);
                 } else {
                     if (username.length() == 0) {
                         Toast.makeText(getApplicationContext(), "Please enter your username", Toast.LENGTH_SHORT).show();
@@ -81,9 +83,7 @@ public class LoginActivity extends Activity implements LoginDelegate{
                         Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_SHORT).show();
                     }
                 }
-                //Log.i(TAG,"USERNAME: "+username);
-                LoginTask loginTask = new LoginTask(username, password);
-                loginTask.setDelegate(loginActivity);
+
             }
         });
 
@@ -97,12 +97,12 @@ public class LoginActivity extends Activity implements LoginDelegate{
         });
     }
 
-    private void startNewActivity() {
+    private void startNewActivity(User user) {
         boolean userWithSpot = false;
         int assignedSpot = 0;
 
         Intent myIntent;
-
+/*
         List<Assignment> assignmentList = DataManager.getInstance().getAssignmentList();
 
         for (Assignment userWithAssignedSpot : assignmentList) {
@@ -122,20 +122,18 @@ public class LoginActivity extends Activity implements LoginDelegate{
             myIntent.putExtra("username", editTextUsername.getText().toString());
             myIntent.putExtra("assignedSpot", assignedSpot);
             startActivity(myIntent);
+        }*/
+
+        if (!user.getType().isEmpty() && user.getType().equals("PERMANENT")) {
+            myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
+        } else {
+            myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
         }
+        startActivity(myIntent);
     }
 
-    public Boolean checkCredentials(String username, String password) {
-        List<User> userList = DataManager.getInstance().getUserList();
 
-        for (User user : userList) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password))
-                return true;
-        }
-        return false;
-    }
-
-    public void getLoginPreferences() {
+        public void getLoginPreferences() {
 
         editTextUsername = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.password);
@@ -157,6 +155,15 @@ public class LoginActivity extends Activity implements LoginDelegate{
 
     @Override
     public void onLoginDone(String result) {
+
         Log.d("TAG" , "LOGIN DONE DELEGATE " + result);
+        if (!result.isEmpty()){
+            User user = DataManager.getInstance().parseUser(result);
+            startNewActivity(user);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), "Returned user is null", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

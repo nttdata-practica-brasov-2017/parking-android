@@ -15,24 +15,24 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-public class LoginTask extends AsyncTask<String, String, Boolean> implements CredentialInterface {
+public class LoginTask extends AsyncTask<String, String, String> implements CredentialInterface {
 
+    private LoginDelegate loginDelegate;
     private String username;
     private String password;
 
-    private LoginDelegate delegate;
-
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected String doInBackground(String... params) {
         try {
             return callLoginService();
         } catch (IOException | JSONException e) {
-            Log.e("ERROR", "Failed to login.", e);
-            return false;
+            e.printStackTrace();
+       //     Log.e("ERROR", "Failed to login.", e);
+            return null;
         }
     }
 
-    private Boolean callLoginService() throws IOException, JSONException {
+    private String callLoginService() throws IOException, JSONException {
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("login").build();
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
@@ -49,34 +49,34 @@ public class LoginTask extends AsyncTask<String, String, Boolean> implements Cre
         Scanner s = new Scanner(connection.getInputStream()).useDelimiter("\\A");
         String result = s.hasNext() ? s.next() : "";
 
-        return Boolean.valueOf(result);
+        return result;
     }
 
-
     public LoginTask(String username, String password) {
+
         this.username = username;
         this.password = password;
-        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("login").build();
 
+        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("login").build();
         this.execute(uri.toString());
     }
 
     @Override
-    protected void onPostExecute(Boolean o) {
+    protected void onPostExecute(String o) {
         super.onPostExecute(o);
         String response = String.valueOf(o);
 
-        if (delegate != null){
-            delegate.onLoginDone(response);
+        if (loginDelegate != null){
+            loginDelegate.onLoginDone(response);
         }
 
     }
 
     public LoginDelegate getDelegate() {
-        return delegate;
+        return loginDelegate;
     }
 
-    public void setDelegate(LoginDelegate delegate) {
-        this.delegate = delegate;
+    public void setLoginDelegate(LoginDelegate loginDelegate) {
+        this.loginDelegate = loginDelegate;
     }
 }

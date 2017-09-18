@@ -69,7 +69,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
         textAvailableSpots = (TextView) findViewById(R.id.textAvailableSpots);
         listView = (ListView) findViewById(R.id.listView);
-        //  spinnerDate = (Spinner) findViewById(R.id.spinnerDate);
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
         dateTime = new Date();
