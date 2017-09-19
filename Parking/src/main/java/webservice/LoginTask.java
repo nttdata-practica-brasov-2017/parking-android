@@ -9,7 +9,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -36,6 +39,9 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("login").build();
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
+
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
         connection.setRequestMethod("POST");
 
         JSONObject object = new JSONObject();
@@ -46,10 +52,22 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         out.write(object.toString());
         out.close();
 
-        Scanner s = new Scanner(connection.getInputStream()).useDelimiter("\\A");
-        String result = s.hasNext() ? s.next() : "";
 
-        return result;
+        StringBuilder sb = new StringBuilder();
+        int HttpResult = connection.getResponseCode();
+        if (HttpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(connection.getResponseMessage());
+        }
+
+        return sb.toString();
     }
 
     public LoginTask(String username, String password) {
