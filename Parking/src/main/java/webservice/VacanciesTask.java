@@ -7,11 +7,15 @@ package webservice;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import org.json.JSONException;;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
 public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
 
@@ -33,10 +37,20 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
         connection.setRequestMethod("GET");
 
-        Scanner s = new Scanner(connection.getInputStream()).useDelimiter("\\A");
-        String result = s.hasNext() ? s.next() : "";
-
-        return result;
+        StringBuilder sb = new StringBuilder();
+        int httpResult = connection.getResponseCode();
+        if (httpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(connection.getResponseMessage());
+        }
+        return sb.toString();
     }
 
 

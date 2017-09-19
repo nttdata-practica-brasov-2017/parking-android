@@ -6,17 +6,14 @@ package webservice;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
 public class LoginTask extends AsyncTask<String, String, String> implements CredentialInterface {
 
@@ -30,7 +27,6 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
             return callLoginService();
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-       //     Log.e("ERROR", "Failed to login.", e);
             return null;
         }
     }
@@ -43,6 +39,8 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestMethod("POST");
+        connection.setConnectTimeout(1000000);
+        connection.setReadTimeout(1000000);
 
         JSONObject object = new JSONObject();
         object.put("username", username);
@@ -52,10 +50,9 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         out.write(object.toString());
         out.close();
 
-
         StringBuilder sb = new StringBuilder();
-        int HttpResult = connection.getResponseCode();
-        if (HttpResult == HttpURLConnection.HTTP_OK) {
+        int httpResult = connection.getResponseCode();
+        if (httpResult == HttpURLConnection.HTTP_OK) {
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
             String line = null;
             while ((line = br.readLine()) != null) {
@@ -66,7 +63,6 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         } else {
             System.out.println(connection.getResponseMessage());
         }
-
         return sb.toString();
     }
 
@@ -87,7 +83,6 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         if (loginDelegate != null){
             loginDelegate.onLoginDone(response);
         }
-
     }
 
     public LoginDelegate getDelegate() {

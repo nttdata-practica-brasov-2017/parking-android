@@ -40,7 +40,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     private int mMonth;
     private int mDay;
     private TextView textAvailableSpots;
-    private List<Vacancy> vacancyList;
     private Date dateTime;
     private String username;
     private List<String> listDate;
@@ -64,8 +63,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         btnSelectDate.setOnClickListener(this);
         txtSelectDate = (EditText) findViewById(R.id.txtSelectDate);
         btnClaim = (Button) findViewById(R.id.btnClaim);
-
-        vacancyList = DataManager.getInstance().getVacancyList();
+        btnBack = (Button) findViewById(R.id.btnBack);
 
         textAvailableSpots = (TextView) findViewById(R.id.textAvailableSpots);
         listView = (ListView) findViewById(R.id.listView);
@@ -78,19 +76,9 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        //daca username-ul logat se afla prin lista de Vacancy, se considera ca a rezervat deja acel loc si nu mai poate face alte actiuni
-        for (Vacancy v : DataManager.getInstance().getVacancyList())
-            if (v.getBookedBy().equals(username))
-                clickedClaim = true;
-
-        addItemsOnListView();
-        registerClickCallBack();
-
-        btnBack = (Button) findViewById(R.id.btnBack);
-
-
         VacanciesTask vacanciesTask = new VacanciesTask();
         vacanciesTask.setVacanciesDelegate(claimActivity);
+
 
         btnBack.setOnClickListener(new View.OnClickListener() {
 
@@ -203,6 +191,16 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
     public void onVacanciesDone(String result) {
         Log.d("TAG", "VACANCIES DONE DELEGATE " + result);
-        DataManager.getInstance().parseVacancies(result);
+        List<Vacancy> vacancyList = DataManager.getInstance().parseVacancies(result);
+
+        DataManager.getInstance().setVacancyList(vacancyList);
+
+        //daca username-ul logat se afla prin lista de Vacancy, se considera ca a rezervat deja acel loc si nu mai poate face alte actiuni
+        for (Vacancy v : vacancyList)
+            if (v.getBookedBy().equals(username))
+                clickedClaim = true;
+
+        addItemsOnListView();
+        registerClickCallBack();
     }
 }

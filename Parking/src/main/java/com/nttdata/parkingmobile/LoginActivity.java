@@ -98,40 +98,20 @@ public class LoginActivity extends Activity implements LoginDelegate{
     }
 
     private void startNewActivity(User user) {
-        boolean userWithSpot = false;
-        int assignedSpot = 0;
-
-        Intent myIntent;
-/*
-        List<Assignment> assignmentList = DataManager.getInstance().getAssignmentList();
-
-        for (Assignment userWithAssignedSpot : assignmentList) {
-            //check if user has an assigned spot.
-            if (userWithAssignedSpot.getUsername().equals(username)) {
-                userWithSpot = true;
-                assignedSpot = userWithAssignedSpot.getSpotNumber();
-            }
-
-            if (userWithSpot) {
-                myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
-            } else {
-                myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
-            }
-
-            // Store value at the time of the login attempt.
-            myIntent.putExtra("username", editTextUsername.getText().toString());
-            myIntent.putExtra("assignedSpot", assignedSpot);
-            startActivity(myIntent);
-        }*/
+         Intent myIntent;
 
         if (!user.getType().isEmpty() && user.getType().equals("PERMANENT")) {
             myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
         } else {
             myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
         }
+
+        myIntent.putExtra("username", user.getUsername());
+
+        //to modify assigned spot
+        myIntent.putExtra("assignedSpot", 1);
         startActivity(myIntent);
     }
-
 
         public void getLoginPreferences() {
 
