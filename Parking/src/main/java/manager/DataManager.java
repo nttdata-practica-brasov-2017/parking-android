@@ -74,6 +74,7 @@ public class DataManager {
             Log.d("TAG", "jsonObject - " + String.valueOf(jsonObject));
 
             user.setUsername(jsonObject.getString("username"));
+
             user.setFirstName(jsonObject.getString("firstName"));
             user.setLastName(jsonObject.getString("lastName"));
             user.setType(jsonObject.getString("type"));
@@ -111,20 +112,39 @@ public class DataManager {
                 calendar.set(Calendar.MILLISECOND, 0);
 
 
-                SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-                Date dateTime = new Date();
-                Date vacatedAtdate = new Date();
-                Date bookedBydate = new Date();
+
+                String strDate = jsonObject.getString("date");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateTime = null;
 
 
                 try {
-                    dateTime = fmt.parse(String.valueOf(jsonObject.get("date")));
+                    dateTime = format.parse(strDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+                String dateTime1 = fmtOut.format(dateTime);
+
+                try {
+                    vacancy.setDate(fmtOut.parse(dateTime1));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Date vacatedAtdate = new Date();
+                Date bookedBydate = new Date();
+
+/*
+                try {
+                    dateTime = fmt.parse();
                     vacatedAtdate = fmt.parse(String.valueOf(jsonObject.get("vacatedAt")));
                     bookedBydate = fmt.parse(String.valueOf(jsonObject.get("bookedBy")));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                vacancy.setDate(dateTime);
+
                 vacancy.setDate(bookedBydate);
 
                 if (calendar.getTime().after(vacatedAtdate) ){
@@ -133,7 +153,7 @@ public class DataManager {
                 else {
                     Toast.makeText(context, "You cannot select a date before today :) ", Toast.LENGTH_SHORT).show();
                 }
-
+*/
                 //add object to list
                 vacancyList.add(vacancy);
             }

@@ -27,6 +27,7 @@ public class LoginActivity extends Activity implements LoginDelegate{
     private CheckBox checkBox_RememberMe;
     private String username;
     private String password;
+    private String passwordSentToVacancy;
     private User user;
 
     private SharedPreferences loginPreferences;
@@ -70,6 +71,8 @@ public class LoginActivity extends Activity implements LoginDelegate{
                         loginPrefsEditor.clear();
                         loginPrefsEditor.commit();
                     }
+
+                    passwordSentToVacancy = password;
                     LoginTask loginTask = new LoginTask(username, password);
                     loginTask.setLoginDelegate(loginActivity);
                 } else {
@@ -107,6 +110,7 @@ public class LoginActivity extends Activity implements LoginDelegate{
         }
 
         myIntent.putExtra("username", user.getUsername());
+        myIntent.putExtra("password", passwordSentToVacancy);
 
         //to modify assigned spot
         myIntent.putExtra("assignedSpot", 1);

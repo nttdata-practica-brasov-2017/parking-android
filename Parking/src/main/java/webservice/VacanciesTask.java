@@ -6,6 +6,7 @@ package webservice;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,13 +14,16 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 
 public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
 
     private VacanciesDelegate vacanciesDelegate;
+    private String username;
+   private String password;
 
     @Override
     protected String doInBackground(String... params) {
@@ -34,8 +38,23 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
     private String callVacanciesService() throws IOException, JSONException {
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").build();
+
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
         connection.setRequestMethod("GET");
+
+        connection.setUseCaches(false);
+        connection.setRequestProperty("User-Agent", "MyAgent");
+        connection.setConnectTimeout(30000);
+        connection.setReadTimeout(30000);
+
+        String baseAuthStr = username + ":" + password;
+        connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
+
+        JSONObject object = new JSONObject();
+        object.put("username", username);
+        object.put("password", password);
+
+        connection.connect();
 
         StringBuilder sb = new StringBuilder();
         int httpResult = connection.getResponseCode();
@@ -50,11 +69,17 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
         } else {
             System.out.println(connection.getResponseMessage());
         }
+
+        //connection.disconnect();
+
         return sb.toString();
     }
 
 
-    public VacanciesTask() {
+    public VacanciesTask(String username, String password) {
+
+        this.username = username;
+        this.password = password;
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").build();
         this.execute(uri.toString());

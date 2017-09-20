@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import manager.DataManager;
+import model.User;
 import model.Vacancy;
 
 import webservice.VacanciesDelegate;
@@ -42,11 +43,13 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     private TextView textAvailableSpots;
     private Date dateTime;
     private String username;
-    private List<String> listDate;
+    private String password;
+    private List<String> listSpots;
     private ListView listView;
     private String selected;
     private ClaimActivity claimActivity;
     boolean clickedClaim = false;
+    private List<Vacancy> vacancyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         claimActivity = this;
 
         username = getIntent().getExtras().getString("username");
+        password = getIntent().getExtras().getString("password");
 
         TextView textUser = (TextView) findViewById(R.id.textUser);
         textUser.setText("Welcome " + username + " !");
@@ -76,7 +80,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        VacanciesTask vacanciesTask = new VacanciesTask();
+        VacanciesTask vacanciesTask = new VacanciesTask(username, password);
         vacanciesTask.setVacanciesDelegate(claimActivity);
 
 
@@ -95,14 +99,14 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 clickedClaim = true;
-                for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
+                for (Vacancy vacancySpotClaimed : vacancyList)
                     try {
                         if (!selected.isEmpty() &&
-                                vacancyList.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
-                                vacancyList.getSpotNumber() == Integer.parseInt(selected.toString()) &&
-                                vacancyList.getBookedBy().isEmpty()) {
-                            vacancyList.setBookedBy(username);
-                            Toast.makeText(getApplicationContext(), "Your have booked spot number " + vacancyList.getSpotNumber() +
+                                vacancySpotClaimed.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
+                                vacancySpotClaimed.getSpotNumber() == Integer.parseInt(selected.toString()) &&
+                                vacancySpotClaimed.getBookedBy()==null) {
+                            vacancySpotClaimed.setBookedBy(username);
+                            Toast.makeText(getApplicationContext(), "Your have booked spot number " + vacancySpotClaimed.getSpotNumber() +
                                     " on " + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
 
                         }
@@ -121,7 +125,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!clickedClaim) {
-                    selected = listDate.get(position);
+                    selected = listSpots.get(position);
                     Toast.makeText(ClaimActivity.this, "You chose: " + selected, Toast.LENGTH_LONG).show();
                 } else
                     Toast.makeText(getApplicationContext(), "You already booked a parking space!" +
@@ -158,13 +162,14 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
     public void addItemsOnListView() {
         btnClaim.setEnabled(true);
-        listDate = new ArrayList<String>();
+        listSpots = new ArrayList<String>();
 
-        if (DataManager.getInstance().getVacancyList().size() > 0) {
-            for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
+        if (vacancyList.size() > 0) {
+            for (Vacancy vacancySpots : vacancyList)
                 try {
-                    if (vacancyList.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) && vacancyList.getBookedBy().isEmpty()) {
-                        listDate.add(new Integer(vacancyList.getSpotNumber()).toString());
+                    if (vacancySpots.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
+                            vacancySpots.getBookedBy()== null) {
+                        listSpots.add(new Integer(vacancySpots.getSpotNumber()).toString());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -172,10 +177,10 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         }
 
         //Build adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listDate);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpots);
         listView.setAdapter(adapter);
 
-        if (listDate.size() == 0 && !txtSelectDate.getText().toString().isEmpty()) {
+        if (listSpots.size() == 0 && !txtSelectDate.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "There are no other parking spots available on " +
                     txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
 
@@ -183,24 +188,26 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             textAvailableSpots.setText("");
         }
 
+
         if (clickedClaim) {
             btnClaim.setEnabled(false);
             textAvailableSpots.setText("");
         }
+
     }
 
     public void onVacanciesDone(String result) {
         Log.d("TAG", "VACANCIES DONE DELEGATE " + result);
-        List<Vacancy> vacancyList = DataManager.getInstance().parseVacancies(result);
+        vacancyList = DataManager.getInstance().parseVacancies(result);
 
         DataManager.getInstance().setVacancyList(vacancyList);
 
         //daca username-ul logat se afla prin lista de Vacancy, se considera ca a rezervat deja acel loc si nu mai poate face alte actiuni
         for (Vacancy v : vacancyList)
-            if (v.getBookedBy().equals(username))
+            if (v.getBookedBy()!= null && v.getBookedBy().equals(username))
                 clickedClaim = true;
 
-        addItemsOnListView();
-        registerClickCallBack();
+        //addItemsOnListView();
+       registerClickCallBack();
     }
 }
