@@ -113,7 +113,7 @@ public class LoginActivity extends Activity implements LoginDelegate{
         myIntent.putExtra("password", passwordSentToVacancy);
 
         //to modify assigned spot
-        myIntent.putExtra("assignedSpot", 1);
+        //myIntent.putExtra("assignedSpot", 1);
         startActivity(myIntent);
     }
 
