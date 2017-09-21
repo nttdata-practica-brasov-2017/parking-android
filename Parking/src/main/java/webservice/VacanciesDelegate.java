@@ -1,9 +1,9 @@
 package webservice;
 
 /**
- * Created by Raluca on 16.09.2017.
+ * Created by m09ny on 09/15/17.
  */
 
 public interface VacanciesDelegate {
-    public void onVacanciesDone(String result);
+        public void onVacanciesDone(String result);
 }

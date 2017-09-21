@@ -1,6 +1,8 @@
 package manager;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +19,10 @@ import model.Assignment;
 import model.Spot;
 import model.User;
 import model.Vacancy;
+
+/**
+ * Created by m09ny on 09/11/17.
+ */
 
 public class DataManager {
 
@@ -26,17 +33,7 @@ public class DataManager {
     }
 
     private DataManager() {
-
-        createUserList();
-        createSpotList();
-        createAssignmentList();
-        setVacancyList(new ArrayList<Vacancy>());
-
         Log.d("TAG", "DataManager()");
-    }
-
-    public void ceva() {
-        Log.d("TAG", "ceva()");
     }
 
     private List<User> userList;
@@ -47,7 +44,6 @@ public class DataManager {
     public List<User> getUserList() {
         return userList;
     }
-
     public void setUserList(List<User> userList) {
         this.userList = userList;
     }
@@ -55,80 +51,41 @@ public class DataManager {
     public List<Assignment> getAssignmentList() {
         return assignmentList;
     }
-
-    public void setAssignmentList(List<Assignment> assignmentList) {
-        this.assignmentList = assignmentList;
-    }
+    public void setAssignmentList(List<Assignment> assignmentList) { this.assignmentList = assignmentList; }
 
     public List<Spot> getSpotList() {
         return spotList;
     }
-
     public void setSpotList(List<Spot> spotList) {
         this.spotList = spotList;
     }
 
-    public List<Vacancy> getVacancyList() {
-        return vacancyList;
+    public List<Vacancy> getVacancyList() { return vacancyList; }
+    public void setVacancyList(List<Vacancy> vacancyList) { this.vacancyList = vacancyList; }
+
+    Context context;
+
+    public User parseUser(String inputJSON) {
+
+        User user = new User();
+
+        try {
+            JSONObject jsonObject = new JSONObject(inputJSON);
+            Log.d("TAG", "jsonObject - " + String.valueOf(jsonObject));
+
+            user.setUsername(jsonObject.getString("username"));
+
+            user.setFirstName(jsonObject.getString("firstName"));
+            user.setLastName(jsonObject.getString("lastName"));
+            user.setType(jsonObject.getString("type"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return user;
     }
 
-    public void setVacancyList(List<Vacancy> vacancyList) {
-        this.vacancyList = vacancyList;
-    }
-
-    private void createUserList() {
-        userList = new ArrayList<User>();
-        userList.add(new User("admin", "admin", "admin", "admin", true));
-        userList.add(new User("user1", "user1", "user1", "user1", true));
-        userList.add(new User("user2", "user2", "user2", "user2", true));
-        userList.add(new User("user3", "user3", "user3", "user3", true));
-        userList.add(new User("user4", "user4", "user4", "user4", true));
-        userList.add(new User("user5", "user5", "user5", "user5", true));
-        userList.add(new User("user6", "user6", "user6", "user6", true));
-        userList.add(new User("user7", "user7", "user7", "user7", true));
-        userList.add(new User("user8", "user8", "user8", "user8", false));
-        userList.add(new User("user9", "user9", "user9", "user9", false));
-        userList.add(new User("user10", "user10", "user10", "user10", false));
-        userList.add(new User("user11", "user11", "user11", "user11", false));
-        userList.add(new User("user12", "user12", "user12", "user12", false));
-    }
-
-    private void createAssignmentList() {
-        assignmentList = new ArrayList<Assignment>();
-        assignmentList.add(new Assignment("admin", 1));
-        assignmentList.add(new Assignment("user1", 2));
-        assignmentList.add(new Assignment("user2", 3));
-        assignmentList.add(new Assignment("user3", 4));
-        assignmentList.add(new Assignment("user4", 5));
-        assignmentList.add(new Assignment("user5", 6));
-        assignmentList.add(new Assignment("user6", 7));
-        assignmentList.add(new Assignment("user7", 8));
-
-    }
-
-    private void createSpotList() {
-        spotList = new ArrayList<Spot>();
-        spotList.add(new Spot(1, 1));
-        spotList.add(new Spot(2, 1));
-        spotList.add(new Spot(3, 1));
-        spotList.add(new Spot(4, 1));
-        spotList.add(new Spot(5, 1));
-        spotList.add(new Spot(6, 1));
-        spotList.add(new Spot(7, 1));
-        spotList.add(new Spot(8, 1));
-        spotList.add(new Spot(9, 1));
-        spotList.add(new Spot(10, 2));
-        spotList.add(new Spot(11, 2));
-        spotList.add(new Spot(12, 2));
-        spotList.add(new Spot(13, 2));
-        spotList.add(new Spot(14, 2));
-        spotList.add(new Spot(15, 2));
-        spotList.add(new Spot(16, 2));
-        spotList.add(new Spot(17, 2));
-        spotList.add(new Spot(18, 2));
-        spotList.add(new Spot(19, 2));
-        spotList.add(new Spot(20, 2));
-    }
 
     public List<Vacancy> parseVacancies(String inputJSON) {
 
@@ -138,9 +95,8 @@ public class DataManager {
             JSONArray jsonArray = new JSONArray(inputJSON);
             Log.d("TAG", "JSONArray - " + String.valueOf(jsonArray));
 
-            for (int i = 0; i < jsonArray.length(); i++) {
+            for (int i=0 ; i<jsonArray.length() ; i++){
                 Vacancy vacancy = new Vacancy();
-
 
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject spotObject = jsonObject.getJSONObject("spot");
@@ -149,23 +105,59 @@ public class DataManager {
 
                 vacancy.setSpotNumber(spotObject.getInt("number"));
 
-                SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-                Date dateTime = new Date();
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+
+
+                String strDate = jsonObject.getString("date");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateTime = null;
+
+
+                try {
+                    dateTime = format.parse(strDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+                String dateTime1 = fmtOut.format(dateTime);
+
+                try {
+                    vacancy.setDate(fmtOut.parse(dateTime1));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 Date vacatedAtdate = new Date();
                 Date bookedBydate = new Date();
+
+/*
                 try {
-                    dateTime = fmt.parse(String.valueOf(jsonObject.get("date")));
+                    dateTime = fmt.parse();
                     vacatedAtdate = fmt.parse(String.valueOf(jsonObject.get("vacatedAt")));
                     bookedBydate = fmt.parse(String.valueOf(jsonObject.get("bookedBy")));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-                vacancy.setDate(dateTime);
-                vacancy.setDate(vacatedAtdate);
                 vacancy.setDate(bookedBydate);
+
+                if (calendar.getTime().after(vacatedAtdate) ){
+                    vacancy.setDate(vacatedAtdate);
+                }
+                else {
+                    Toast.makeText(context, "You cannot select a date before today :) ", Toast.LENGTH_SHORT).show();
+                }
+*/
+                //add object to list
                 vacancyList.add(vacancy);
             }
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -173,6 +165,7 @@ public class DataManager {
 
         return vacancyList;
     }
+
 
 
 }

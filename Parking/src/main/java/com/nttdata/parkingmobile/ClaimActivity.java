@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import manager.DataManager;
+import model.User;
 import model.Vacancy;
 
 import webservice.VacanciesDelegate;
@@ -40,15 +41,15 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     private int mMonth;
     private int mDay;
     private TextView textAvailableSpots;
-    // private Spinner spinnerDate;
-    private List<Vacancy> vacancyList;
     private Date dateTime;
     private String username;
-    List<String> listDate;
-    ListView listView;
+    private String password;
+    private List<String> listSpots;
+    private ListView listView;
     private String selected;
-    ClaimActivity claimActivity;
+    private ClaimActivity claimActivity;
     boolean clickedClaim = false;
+    private List<Vacancy> vacancyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         claimActivity = this;
 
         username = getIntent().getExtras().getString("username");
+        password = getIntent().getExtras().getString("password");
 
         TextView textUser = (TextView) findViewById(R.id.textUser);
         textUser.setText("Welcome " + username + " !");
@@ -65,12 +67,10 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         btnSelectDate.setOnClickListener(this);
         txtSelectDate = (EditText) findViewById(R.id.txtSelectDate);
         btnClaim = (Button) findViewById(R.id.btnClaim);
-
-        vacancyList = DataManager.getInstance().getVacancyList();
+        btnBack = (Button) findViewById(R.id.btnBack);
 
         textAvailableSpots = (TextView) findViewById(R.id.textAvailableSpots);
         listView = (ListView) findViewById(R.id.listView);
-        //  spinnerDate = (Spinner) findViewById(R.id.spinnerDate);
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
         dateTime = new Date();
@@ -80,19 +80,9 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        //daca username-ul logat se afla prin lista de Vacancy, se considera ca a rezervat deja acel loc si nu mai poate face alte actiuni
-        for (Vacancy v : DataManager.getInstance().getVacancyList())
-            if (v.getBookedBy().equals(username))
-                clickedClaim = true;
-
-        addItemsOnListView();
-        registerClickCallBack();
-
-        btnBack = (Button) findViewById(R.id.btnBack);
-
-
-        VacanciesTask vacanciesTask = new VacanciesTask();
+        VacanciesTask vacanciesTask = new VacanciesTask(username, password);
         vacanciesTask.setVacanciesDelegate(claimActivity);
+
 
         btnBack.setOnClickListener(new View.OnClickListener() {
 
@@ -104,25 +94,19 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        //if (listDate.isEmpty())
-        //  btnClaim.setEnabled(false);
-
-
         btnClaim.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // String selectedItem = spinnerDate.getSelectedItem().toString();
-
                 clickedClaim = true;
-                for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
+                for (Vacancy vacancySpotClaimed : vacancyList)
                     try {
                         if (!selected.isEmpty() &&
-                                vacancyList.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
-                                vacancyList.getSpotNumber() == Integer.parseInt(selected.toString()) &&
-                                vacancyList.getBookedBy().isEmpty()) {
-                            vacancyList.setBookedBy(username);
-                            Toast.makeText(getApplicationContext(), "Your have booked spot number " + vacancyList.getSpotNumber() +
+                                vacancySpotClaimed.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
+                                vacancySpotClaimed.getSpotNumber() == Integer.parseInt(selected.toString()) &&
+                                vacancySpotClaimed.getBookedBy()==null) {
+                            vacancySpotClaimed.setBookedBy(username);
+                            Toast.makeText(getApplicationContext(), "Your have booked spot number " + vacancySpotClaimed.getSpotNumber() +
                                     " on " + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
 
                         }
@@ -130,8 +114,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         e.printStackTrace();
                     }
                 addItemsOnListView();
-
-
             }
         });
     }
@@ -139,23 +121,17 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     private void registerClickCallBack() {
 
         //String selectedItem;
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //selected = ((TextView) view.findViewById(R.id.listView)).getText().toString();
-
                 if (!clickedClaim) {
-                    selected = listDate.get(position);
+                    selected = listSpots.get(position);
                     Toast.makeText(ClaimActivity.this, "You chose: " + selected, Toast.LENGTH_LONG).show();
                 } else
                     Toast.makeText(getApplicationContext(), "You already booked a parking space!" +
                             txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     //Date picker
@@ -181,53 +157,30 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
-
-
         }
     }
 
-    /*private void registerClickCallBack()
-    {
-        ListView listV=(ListView)findViewById(R.id.ListView);
-        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Toast.makeText(SecondActivity.this,"You clicked: "+position, Toast.LENGTH_LONG).show();
-            }
-        });
-    }*/
-
     public void addItemsOnListView() {
-
         btnClaim.setEnabled(true);
+        listSpots = new ArrayList<String>();
 
-        listDate = new ArrayList<String>();
-        Integer s;
-
-        if (DataManager.getInstance().getVacancyList().size() > 0) {
-            for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
+        if (vacancyList.size() > 0) {
+            for (Vacancy vacancySpots : vacancyList)
                 try {
-                    if (vacancyList.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) && vacancyList.getBookedBy().isEmpty()) {
-                        s = new Integer(vacancyList.getSpotNumber());
-                        listDate.add(s.toString());
+                    if (vacancySpots.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
+                            vacancySpots.getBookedBy()== null) {
+                        listSpots.add(new Integer(vacancySpots.getSpotNumber()).toString());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
         }
 
-        // listView=(ListView)findViewById(R.id.listView);
-        /* ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listDate);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDate.setAdapter(dataAdapter);*/
-
         //Build adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listDate);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpots);
         listView.setAdapter(adapter);
 
-
-        if (listDate.size() == 0) {
+        if (listSpots.size() == 0 && !txtSelectDate.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "There are no other parking spots available on " +
                     txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
 
@@ -235,18 +188,26 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             textAvailableSpots.setText("");
         }
 
+
         if (clickedClaim) {
             btnClaim.setEnabled(false);
             textAvailableSpots.setText("");
         }
 
-
     }
 
     public void onVacanciesDone(String result) {
         Log.d("TAG", "VACANCIES DONE DELEGATE " + result);
+        vacancyList = DataManager.getInstance().parseVacancies(result);
 
-        DataManager.getInstance().parseVacancies(result);
+        DataManager.getInstance().setVacancyList(vacancyList);
+
+        //daca username-ul logat se afla prin lista de Vacancy, se considera ca a rezervat deja acel loc si nu mai poate face alte actiuni
+        for (Vacancy v : vacancyList)
+            if (v.getBookedBy()!= null && v.getBookedBy().equals(username))
+                clickedClaim = true;
+
+        //addItemsOnListView();
+       registerClickCallBack();
     }
-
 }

@@ -11,13 +11,15 @@
         android:id="@+id/textUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
+        android:layout_marginTop="27dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        android:textStyle="bold" />
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 
     <EditText
@@ -27,8 +29,7 @@
         android:layout_marginTop="79dp"
         android:layout_below="@+id/textAssignedSpot"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:editable="false" />
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -50,18 +51,6 @@
         android:layout_alignLeft="@+id/btnSelectDate"
         android:layout_alignStart="@+id/btnSelectDate" />
 
-    <Button
-        android:id="@+id/btnClaim"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Claim"
-        android:layout_alignBaseline="@+id/btnBack"
-        android:layout_alignBottom="@+id/btnBack"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="43dp"
-        android:layout_marginStart="43dp" />
-
     <TextView
         android:id="@+id/textAvailableSpots"
         android:layout_width="wrap_content"
@@ -72,9 +61,11 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/btnSelectDate"
         android:layout_marginTop="24dp"
-        android:text="TextView"
-        android:textSize="24sp"
-        android:editable="false"/>
+        android:fontFamily="sans-serif"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/listView"
@@ -84,5 +75,18 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textAvailableSpots"
-        android:layout_toStartOf="@+id/btnClaim" />
+        android:layout_toStartOf="@+id/btnClaim"
+        android:layout_toLeftOf="@+id/btnClaim" />
+
+    <Button
+        android:id="@+id/btnClaim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Claim"
+        android:layout_alignBaseline="@+id/btnBack"
+        android:layout_alignBottom="@+id/btnBack"
+        android:layout_alignLeft="@+id/textUser"
+        android:layout_alignStart="@+id/textUser"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="19dp" />
 </RelativeLayout>

@@ -1,41 +1,46 @@
 package webservice;
 
+/**
+ * Created by m09ny on 09/13/17.
+ */
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
-public class LoginTask extends AsyncTask<String, String, Boolean> implements CredentialInterface {
+public class LoginTask extends AsyncTask<String, String, String> implements CredentialInterface {
 
+    private LoginDelegate loginDelegate;
     private String username;
     private String password;
 
-    private LoginDelegate delegate;
-
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected String doInBackground(String... params) {
         try {
             return callLoginService();
         } catch (IOException | JSONException e) {
-            Log.e("ERROR", "Failed to login.", e);
-            return false;
+            e.printStackTrace();
+            return null;
         }
     }
 
-    private Boolean callLoginService() throws IOException, JSONException {
+    private String callLoginService() throws IOException, JSONException {
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("login").build();
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
+
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
         connection.setRequestMethod("POST");
+        connection.setConnectTimeout(1000000);
+        connection.setReadTimeout(1000000);
 
         JSONObject object = new JSONObject();
         object.put("username", username);
@@ -45,36 +50,46 @@ public class LoginTask extends AsyncTask<String, String, Boolean> implements Cre
         out.write(object.toString());
         out.close();
 
-        Scanner s = new Scanner(connection.getInputStream()).useDelimiter("\\A");
-        String result = s.hasNext() ? s.next() : "";
-
-        return Boolean.valueOf(result);
+        StringBuilder sb = new StringBuilder();
+        int httpResult = connection.getResponseCode();
+        if (httpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(connection.getResponseMessage());
+        }
+        return sb.toString();
     }
 
-
     public LoginTask(String username, String password) {
+
         this.username = username;
         this.password = password;
-        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("login").build();
 
+        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("login").build();
         this.execute(uri.toString());
     }
 
     @Override
-    protected void onPostExecute(Boolean o) {
+    protected void onPostExecute(String o) {
         super.onPostExecute(o);
         String response = String.valueOf(o);
 
-        if (delegate != null) {
-            delegate.onLoginDone(response);
+        if (loginDelegate != null){
+            loginDelegate.onLoginDone(response);
         }
     }
 
     public LoginDelegate getDelegate() {
-        return delegate;
+        return loginDelegate;
     }
 
-    public void setDelegate(LoginDelegate delegate) {
-        this.delegate = delegate;
+    public void setLoginDelegate(LoginDelegate loginDelegate) {
+        this.loginDelegate = loginDelegate;
     }
 }

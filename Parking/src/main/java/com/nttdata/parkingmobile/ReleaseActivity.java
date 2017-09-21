@@ -60,7 +60,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 // Start NewActivity.class
                 Intent myReleaseIntent = new Intent(ReleaseActivity.this, LoginActivity.class);
-
                 startActivity(myReleaseIntent);
             }
         });

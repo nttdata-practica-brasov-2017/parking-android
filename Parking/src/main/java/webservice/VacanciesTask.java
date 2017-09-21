@@ -1,24 +1,29 @@
 package webservice;
 
 /**
- * Created by Raluca on 16.09.2017.
+ * Created by m09ny on 09/15/17.
  */
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.nttdata.parkingmobile.ClaimActivity;
-
-import org.json.JSONException;;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.util.Scanner;
 
-public class VacanciesTask extends AsyncTask<String, String, String> implements CredentialInterface {
+public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
 
     private VacanciesDelegate vacanciesDelegate;
+    private String username;
+   private String password;
 
     @Override
     protected String doInBackground(String... params) {
@@ -33,16 +38,48 @@ public class VacanciesTask extends AsyncTask<String, String, String> implements 
     private String callVacanciesService() throws IOException, JSONException {
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").build();
+
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
         connection.setRequestMethod("GET");
 
-        Scanner s = new Scanner(connection.getInputStream()).useDelimiter("\\A");
-        String result = s.hasNext() ? s.next() : "";
+        connection.setUseCaches(false);
+        connection.setRequestProperty("User-Agent", "MyAgent");
+        connection.setConnectTimeout(30000);
+        connection.setReadTimeout(30000);
 
-        return result;
+        String baseAuthStr = username + ":" + password;
+        connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
+
+        JSONObject object = new JSONObject();
+        object.put("username", username);
+        object.put("password", password);
+
+        connection.connect();
+
+        StringBuilder sb = new StringBuilder();
+        int httpResult = connection.getResponseCode();
+        if (httpResult == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            System.out.println("" + sb.toString());
+        } else {
+            System.out.println(connection.getResponseMessage());
+        }
+
+        //connection.disconnect();
+
+        return sb.toString();
     }
 
-    public VacanciesTask() {
+
+    public VacanciesTask(String username, String password) {
+
+        this.username = username;
+        this.password = password;
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").build();
         this.execute(uri.toString());
@@ -53,7 +90,7 @@ public class VacanciesTask extends AsyncTask<String, String, String> implements 
         super.onPostExecute(o);
         String response = String.valueOf(o);
 
-        if (vacanciesDelegate != null) {
+        if (vacanciesDelegate != null){
             vacanciesDelegate.onVacanciesDone(response);
         }
 
@@ -63,9 +100,7 @@ public class VacanciesTask extends AsyncTask<String, String, String> implements 
         return vacanciesDelegate;
     }
 
-    public void setVacanciesDelegate(ClaimActivity vacanciesDelegate) {
+    public void setVacanciesDelegate(VacanciesDelegate vacanciesDelegate) {
         this.vacanciesDelegate = vacanciesDelegate;
     }
 }
-
-
