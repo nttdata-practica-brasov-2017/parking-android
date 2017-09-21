@@ -1,8 +1,5 @@
 package model;
 
-/**
- * Created by m09ny on 09/08/17.
- */
 
 public class Spot {
 

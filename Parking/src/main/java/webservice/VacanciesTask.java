@@ -1,8 +1,5 @@
 package webservice;
 
-/**
- * Created by m09ny on 09/15/17.
- */
 
 import android.net.Uri;
 import android.os.AsyncTask;
