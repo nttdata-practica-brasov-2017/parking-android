@@ -20,9 +20,6 @@ import model.Spot;
 import model.User;
 import model.Vacancy;
 
-/**
- * Created by m09ny on 09/11/17.
- */
 
 public class DataManager {
 
@@ -44,6 +41,7 @@ public class DataManager {
     public List<User> getUserList() {
         return userList;
     }
+
     public void setUserList(List<User> userList) {
         this.userList = userList;
     }
@@ -51,17 +49,26 @@ public class DataManager {
     public List<Assignment> getAssignmentList() {
         return assignmentList;
     }
-    public void setAssignmentList(List<Assignment> assignmentList) { this.assignmentList = assignmentList; }
+
+    public void setAssignmentList(List<Assignment> assignmentList) {
+        this.assignmentList = assignmentList;
+    }
 
     public List<Spot> getSpotList() {
         return spotList;
     }
+
     public void setSpotList(List<Spot> spotList) {
         this.spotList = spotList;
     }
 
-    public List<Vacancy> getVacancyList() { return vacancyList; }
-    public void setVacancyList(List<Vacancy> vacancyList) { this.vacancyList = vacancyList; }
+    public List<Vacancy> getVacancyList() {
+        return vacancyList;
+    }
+
+    public void setVacancyList(List<Vacancy> vacancyList) {
+        this.vacancyList = vacancyList;
+    }
 
     Context context;
 
@@ -95,7 +102,7 @@ public class DataManager {
             JSONArray jsonArray = new JSONArray(inputJSON);
             Log.d("TAG", "JSONArray - " + String.valueOf(jsonArray));
 
-            for (int i=0 ; i<jsonArray.length() ; i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 Vacancy vacancy = new Vacancy();
 
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -110,7 +117,6 @@ public class DataManager {
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
-
 
 
                 String strDate = jsonObject.getString("date");
@@ -165,7 +171,6 @@ public class DataManager {
 
         return vacancyList;
     }
-
 
 
 }

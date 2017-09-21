@@ -1,8 +1,5 @@
 package webservice;
 
-/**
- * Created by m09ny on 09/15/17.
- */
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,9 +11,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 
 public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
