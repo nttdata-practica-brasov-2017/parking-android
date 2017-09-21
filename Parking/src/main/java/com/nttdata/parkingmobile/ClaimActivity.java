@@ -72,18 +72,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         textAvailableSpots = (TextView) findViewById(R.id.textAvailableSpots);
         listView = (ListView) findViewById(R.id.listView);
 
-        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-        dateTime = new Date();
-        try {
-            dateTime = fmt.parse(txtSelectDate.getText().toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        VacanciesTask vacanciesTask = new VacanciesTask(username, password);
-        vacanciesTask.setVacanciesDelegate(claimActivity);
-
-
         btnBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -99,6 +87,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 clickedClaim = true;
+
                 for (Vacancy vacancySpotClaimed : vacancyList)
                     try {
                         if (!selected.isEmpty() &&
@@ -153,6 +142,21 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             txtSelectDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                             textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
+
+                            SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy"); //TODO
+
+
+                            dateTime = new Date();
+                            try {
+                                dateTime = fmt.parse(txtSelectDate.getText().toString());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            VacanciesTask vacanciesTask = new VacanciesTask(username, password,dateTime);
+                            vacanciesTask.setVacanciesDelegate(claimActivity);
+
+
                             addItemsOnListView();
                         }
                     }, mYear, mMonth, mDay);

@@ -7,18 +7,19 @@ import android.util.Base64;
 import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 
 public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
 
     private VacanciesDelegate vacanciesDelegate;
     private String username;
-   private String password;
+    private String password;
+    private Date dateTime;
 
     @Override
     protected String doInBackground(String... params) {
@@ -32,7 +33,7 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
 
     private String callVacanciesService() throws IOException, JSONException {
 
-        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").build();
+        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").appendQueryParameter("date", dateTime.toString()).build();
 
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
         connection.setRequestMethod("GET");
@@ -71,10 +72,11 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
     }
 
 
-    public VacanciesTask(String username, String password) {
+    public VacanciesTask(String username, String password, Date dateTime) {
 
         this.username = username;
         this.password = password;
+        this.dateTime = dateTime;
 
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").build();
         this.execute(uri.toString());
