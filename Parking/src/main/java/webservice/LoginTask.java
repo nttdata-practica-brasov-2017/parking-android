@@ -1,14 +1,13 @@
 package webservice;
 
-/**
- * Created by m09ny on 09/13/17.
- */
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -66,10 +65,9 @@ public class LoginTask extends AsyncTask<String, String, Boolean> implements Cre
         super.onPostExecute(o);
         String response = String.valueOf(o);
 
-        if (delegate != null){
+        if (delegate != null) {
             delegate.onLoginDone(response);
         }
-
     }
 
     public LoginDelegate getDelegate() {

@@ -1,8 +1,5 @@
 package webservice;
 
-/**
- * Created by m09ny on 09/11/17.
- */
 
 public interface CredentialInterface {
 

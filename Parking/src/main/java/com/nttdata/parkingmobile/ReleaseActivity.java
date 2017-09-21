@@ -24,9 +24,13 @@ import model.Vacancy;
 
 public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnBack, btnRelease, btnDatePicker;
-    EditText txtDate;
-    private int mYear, mMonth, mDay;
+    private Button btnBack;
+    private Button btnRelease;
+    private Button btnDatePicker;
+    private EditText txtDate;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

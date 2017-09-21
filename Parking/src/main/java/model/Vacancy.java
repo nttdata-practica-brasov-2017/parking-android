@@ -2,9 +2,6 @@ package model;
 
 import java.util.Date;
 
-/**
- * Created by m09ny on 09/08/17.
- */
 
 public class Vacancy {
 

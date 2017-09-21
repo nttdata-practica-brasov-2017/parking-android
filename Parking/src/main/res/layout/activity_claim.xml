@@ -27,7 +27,8 @@
         android:layout_marginTop="79dp"
         android:layout_below="@+id/textAssignedSpot"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:editable="false" />
 
     <Button
         android:layout_width="wrap_content"
@@ -49,34 +50,39 @@
         android:layout_alignLeft="@+id/btnSelectDate"
         android:layout_alignStart="@+id/btnSelectDate" />
 
-    <EditText
-        android:id="@+id/textAvailableSpots"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnSelectDate"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Spinner
-        android:id="@+id/spinnerDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textAvailableSpots"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="24dp" />
-
     <Button
         android:id="@+id/btnClaim"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Claim"
-        android:layout_above="@+id/btnBack"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="83dp" />
+        android:layout_alignBaseline="@+id/btnBack"
+        android:layout_alignBottom="@+id/btnBack"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="43dp"
+        android:layout_marginStart="43dp" />
+
+    <TextView
+        android:id="@+id/textAvailableSpots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnSelectDate"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        android:editable="false"/>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnClaim"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textAvailableSpots"
+        android:layout_toStartOf="@+id/btnClaim" />
 </RelativeLayout>

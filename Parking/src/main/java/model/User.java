@@ -1,9 +1,5 @@
 package model;
 
-/**
- * Created by m09ny on 09/08/17.
- */
-
 public class User {
 
     private String username;
@@ -52,7 +48,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+          return "User{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +

@@ -10,15 +10,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import java.util.List;
+
 import manager.DataManager;
 import model.Assignment;
 import model.User;
 import webservice.LoginDelegate;
 import webservice.LoginTask;
 
-public class LoginActivity extends Activity implements LoginDelegate{
+public class LoginActivity extends Activity implements LoginDelegate {
 
     private Button btnSignIn;
     private Button btnCancel;
@@ -30,6 +33,7 @@ public class LoginActivity extends Activity implements LoginDelegate{
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
     LoginActivity loginActivity;
+    ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +48,14 @@ public class LoginActivity extends Activity implements LoginDelegate{
 
         getLoginPreferences();
 
+        spinner = (ProgressBar) findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
+
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                spinner.setVisibility(View.VISIBLE);
                 username = editTextUsername.getText().toString();
                 password = editTextPassword.getText().toString();
 
@@ -149,6 +158,6 @@ public class LoginActivity extends Activity implements LoginDelegate{
 
     @Override
     public void onLoginDone(String result) {
-        Log.d("TAG" , "LOGIN DONE DELEGATE " + result);
+        Log.d("TAG", "LOGIN DONE DELEGATE " + result);
     }
 }
