@@ -103,12 +103,12 @@ public class LoginActivity extends Activity implements LoginDelegate{
     }
 
     private void startNewActivity(User user) {
-         Intent myIntent;
+        Intent myIntent;
 
         if (!user.getType().isEmpty() && user.getType().equals("PERMANENT")) {
             myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
             //TODO trebuie sa accesez assignment pentru a afla numarul locului de parcare si etajul userului permanent pt a transmite mai departe pe claim activity
-          //  myIntent.putExtra("spotNumber", user.)
+            //  myIntent.putExtra("spotNumber", user.)
         } else {
             myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
         }
@@ -122,7 +122,7 @@ public class LoginActivity extends Activity implements LoginDelegate{
         startActivity(myIntent);
     }
 
-        public void getLoginPreferences() {
+    public void getLoginPreferences() {
 
         editTextUsername = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.password);

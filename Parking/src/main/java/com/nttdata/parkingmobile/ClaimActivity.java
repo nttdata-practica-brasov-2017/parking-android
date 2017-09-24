@@ -166,7 +166,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                     Log.d("TAG", "indexStartFloor: " + indexStartFloor);
                     int nrSpot = Integer.parseInt(selected.substring(6, indexStopNumber - 1));
                     Log.d("TAG", "nrSpot: " + nrSpot);
-                   // int nrFloor = Integer.parseInt(selected.substring(indexStartFloor, selected.length()));
+                    // int nrFloor = Integer.parseInt(selected.substring(indexStartFloor, selected.length()));
                     int nrFloor=Integer.parseInt(selected.charAt(selected.length()-1)+"");
                     Log.d("TAG", "nrFloor: " + nrFloor);
                     spotClaimed = new Spot(nrSpot, nrFloor);
