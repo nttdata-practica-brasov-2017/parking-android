@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -26,6 +27,8 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
     private int spotNumber;
     private Date date;
     private Date vacatedAt;
+    private String dateTime;
+    private String vacatedAtString;
 
 
     @Override
@@ -41,7 +44,13 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
     private String callReleaseService() throws IOException, JSONException {
 
         //aici sa ma uit putin cu dateTime la cale
-        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath(username + "/vacancies/assigned?from=" + date + "&to=" + vacatedAt).build();
+        // Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath(username + "/vacancies/assigned?from=" + date + "&to=" + vacatedAt).build();
+        dateTime = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        vacatedAtString = new SimpleDateFormat("yyyy-MM-dd").format(vacatedAt);
+
+        String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + vacatedAtString;
+        Uri uri = Uri.parse(modelString).buildUpon().build();
+
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
 
         connection.setRequestProperty("Content-Type", "application/json");
@@ -52,7 +61,8 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
 
         JSONObject object = new JSONObject();
         object.put("username", username);
-        object.put("spotNumber", spotNumber);
+        // object.put("spotNumber", spotNumber);
+
         object.put("date", date);
         object.put("vacatedAt", vacatedAt);
 
@@ -77,14 +87,20 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
         return sb.toString();
     }
 
-    public ReleaseTask(String username, int spotNumber, Date date, Date vacatedAt) {
+    public ReleaseTask(String username, Date date, Date vacatedAt) {
 
         this.username = username;
-        this.spotNumber = spotNumber;
+        // this.spotNumber = spotNumber;
         this.date = date;
         this.vacatedAt = vacatedAt;
 
-        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath(username + "/vacancies/assigned?from=" + date + "&to=" + vacatedAt).build();
+        dateTime = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        vacatedAtString = new SimpleDateFormat("yyyy-MM-dd").format(vacatedAt);
+
+        String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + vacatedAtString;
+        //Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath(username + "/vacancies/assigned?from=" + date + "&to=" + vacatedAt).build();
+        Uri uri = Uri.parse(modelString).buildUpon().build();
+
         this.execute(uri.toString());
     }
 

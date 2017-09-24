@@ -5,28 +5,23 @@ import java.util.Date;
 
 public class Vacancy {
 
-    private int spotNumber;
+    private Spot spot;
     private Date date;
     private Date vacatedAt;
     private String bookedBy; // username
 
-    public Vacancy(){
+    public Vacancy() {
     }
 
-    public Vacancy(int spotNumber, Date date, Date vacatedAt, String bookedBy) {
-        this.spotNumber = spotNumber;
+    public Vacancy(Spot spot, Date date, Date vacatedAt, String bookedBy) {
+        this.spot = spot;
         this.date = date;
         this.vacatedAt = vacatedAt;
         this.bookedBy = bookedBy;
     }
 
-    public int getSpotNumber() {
-        return spotNumber;
-    }
 
-    public void setSpotNumber(int spotNumber) {
-        this.spotNumber = spotNumber;
-    }
+
 
     public Date getDate() {
         return date;
@@ -55,10 +50,18 @@ public class Vacancy {
     @Override
     public String toString() {
         return "Vacancy{" +
-                "spotNumber=" + spotNumber +
+                "spot=" + spot +
                 ", date=" + date +
                 ", vacatedAt=" + vacatedAt +
                 ", bookedBy='" + bookedBy + '\'' +
                 '}';
+    }
+
+    public void setSpot(Spot spot) {
+        this.spot = spot;
+    }
+
+    public Spot getSpot() {
+        return spot;
     }
 }

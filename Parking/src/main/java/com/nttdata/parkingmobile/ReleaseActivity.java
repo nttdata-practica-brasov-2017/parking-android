@@ -21,8 +21,13 @@ import java.util.Date;
 
 import manager.DataManager;
 import model.Vacancy;
+import webservice.BookedTask;
+import webservice.LoginTask;
+import webservice.ReleaseDelegate;
+import webservice.ReleaseTask;
+import webservice.VacanciesTask;
 
-public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
+public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, ReleaseDelegate {
 
     private Button btnBack;
     private Button btnRelease;
@@ -31,20 +36,31 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private int mYear;
     private int mMonth;
     private int mDay;
+    //private int spotNumber = 0;
+    //private int floor=-1;
+    private Date date;
+    private Date vacatedAt;
+    private String username;
+    private int assignedSpot;
+    private ReleaseActivity releaseActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_release);
 
+        username = getIntent().getExtras().getString("username");
+
         btnDatePicker = (Button) findViewById(R.id.btnSelectDate);
         txtDate = (EditText) findViewById(R.id.txtSelectDate);
         btnRelease = (Button) findViewById(R.id.btnRelease);
 
+        releaseActivity = this;
+
         btnDatePicker.setOnClickListener(this);
 
-        String username = getIntent().getExtras().getString("username");
-        final int assignedSpot = getIntent().getExtras().getInt("assignedSpot");
+        username = getIntent().getExtras().getString("username");
+        assignedSpot = getIntent().getExtras().getInt("assignedSpot");
 
         TextView textUser = (TextView) findViewById(R.id.textUser);
         textUser.setText("Welcome " + username + " !");
@@ -60,6 +76,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 // Start NewActivity.class
                 Intent myReleaseIntent = new Intent(ReleaseActivity.this, LoginActivity.class);
+
                 startActivity(myReleaseIntent);
             }
         });
@@ -69,45 +86,54 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 Vacancy vacancy = new Vacancy();
                 // set assigned spot
-                vacancy.setSpotNumber(assignedSpot);
+                //vacancy.setSpotNumber(assignedSpot);
 
                 //set vacated date
-                SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-                Date vacatedDate = new Date();
+                //SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                //Date currentTime=Calendar.getInstance().getTime();
+                date = new Date();
 
                 try {
-                    vacatedDate = fmt.parse(txtDate.getText().toString());
+                    date = fmt.parse(txtDate.getText().toString());
+
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                vacancy.setDate(vacatedDate);
+                // vacancy.setDate(vacatedDate);
 
                 // set vacated at
-                Date vacatedAt = new Date();
+                //vacatedAt = new Date();
+                vacatedAt=Calendar.getInstance().getTime();
                 String datetime = fmt.format(vacatedAt);
 
-                try {
+               /* try {
                     vacancy.setVacatedAt(fmt.parse(datetime));
                 } catch (ParseException e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 // set booked by
-                vacancy.setBookedBy("");
+                // vacancy.setBookedBy("");
 
                 Boolean alreadyReleased = false;
 
-                for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
+              /*  for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
                     if (vacancyList.getDate().equals(vacancy.getDate()) && vacancyList.getSpotNumber() == vacancy.getSpotNumber()) {
                         alreadyReleased = true;
                     }
-
+*/
                 if (!alreadyReleased) {
                     //add to vacancyList
-                    DataManager.getInstance().getVacancyList().add(vacancy);
+                    //  DataManager.getInstance().getVacancyList().add(vacancy);
+
+                    ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
+                    releaseTask.setReleaseDelegate(releaseActivity);
 
                     Toast.makeText(getApplicationContext(), "You have released spot number " + assignedSpot +
                             " on " + fmt.format(vacancy.getDate()), Toast.LENGTH_SHORT).show();
+
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Your spot number " + assignedSpot +
@@ -116,6 +142,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
+
+
+        // BookedTask bookedTask = new BookedTask(username, spotNumber, floor, date);
+        // bookedTask.setDelegate(releaseActivity);
     }
 
 
@@ -141,5 +171,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
         }
+    }
+
+    @Override
+    public void onReleaseDone(String result) {
+
     }
 }

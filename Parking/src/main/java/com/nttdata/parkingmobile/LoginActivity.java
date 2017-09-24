@@ -73,8 +73,10 @@ public class LoginActivity extends Activity implements LoginDelegate{
                     }
 
                     passwordSentToVacancy = password;
+
                     LoginTask loginTask = new LoginTask(username, password);
                     loginTask.setLoginDelegate(loginActivity);
+
                 } else {
                     if (username.length() == 0) {
                         Toast.makeText(getApplicationContext(), "Please enter your username", Toast.LENGTH_SHORT).show();
@@ -105,12 +107,15 @@ public class LoginActivity extends Activity implements LoginDelegate{
 
         if (!user.getType().isEmpty() && user.getType().equals("PERMANENT")) {
             myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
+            //TODO trebuie sa accesez assignment pentru a afla numarul locului de parcare si etajul userului permanent pt a transmite mai departe pe claim activity
+          //  myIntent.putExtra("spotNumber", user.)
         } else {
             myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
         }
 
         myIntent.putExtra("username", user.getUsername());
         myIntent.putExtra("password", passwordSentToVacancy);
+
 
         //to modify assigned spot
         //myIntent.putExtra("assignedSpot", 1);

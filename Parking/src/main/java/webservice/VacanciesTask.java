@@ -10,8 +10,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
@@ -33,24 +35,23 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
 
     private String callVacanciesService() throws IOException, JSONException {
 
-        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").appendQueryParameter("date", dateTime.toString()).build();
+        //aici am modificat date, data pe care o preiau de a server
+        //yyyy-MM-dd
+        String date= new SimpleDateFormat("yyyy-MM-dd").format(dateTime);
+        Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").appendQueryParameter("date", date).build();
 
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
         connection.setRequestMethod("GET");
 
         connection.setUseCaches(false);
-        connection.setRequestProperty("User-Agent", "MyAgent");
+       connection.setRequestProperty("User-Agent", "MyAgent");
         connection.setConnectTimeout(30000);
         connection.setReadTimeout(30000);
 
         String baseAuthStr = username + ":" + password;
         connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
 
-        JSONObject object = new JSONObject();
-        object.put("username", username);
-        object.put("password", password);
-
-        connection.connect();
+      //  connection.connect();
 
         StringBuilder sb = new StringBuilder();
         int httpResult = connection.getResponseCode();

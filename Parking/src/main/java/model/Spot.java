@@ -1,6 +1,8 @@
 package model;
 
 
+import java.util.Date;
+
 public class Spot {
 
     private int spotNumber;
@@ -11,12 +13,15 @@ public class Spot {
         this.floor = floor;
     }
 
-    public int getNumber() {
+    public Spot() {
+    }
+
+    public int getSpotNumber() {
         return spotNumber;
     }
 
-    public void setNumber(int number) {
-        this.spotNumber = number;
+    public void setSpotNumber(int number) {
+        this.spotNumber = spotNumber;
     }
 
     public int getFloor() {
@@ -34,4 +39,6 @@ public class Spot {
                 ", floor=" + floor +
                 '}';
     }
+
+
 }

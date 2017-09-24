@@ -26,7 +26,7 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
     private int spotNumber;
     private int floor;
     private Date date;
-    private  String dateTime;
+    private String dateTime;
 
     @Override
     protected String doInBackground(String... params) {
@@ -46,14 +46,15 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
                 appendQueryParameter("date", dateTime).
                 appendQueryParameter("spotNumber", String.valueOf(spotNumber)).
                 appendQueryParameter("floor", String.valueOf(floor)).build();*/
-      //  http://parking-parking.193b.starter-ca-central-1.openshiftapps.com/parking-backend/raluca/bookings/spots/6?date=2017-09-20&floor=0
+        //  http://parking-parking.193b.starter-ca-central-1.openshiftapps.com/parking-backend/raluca/bookings/spots/6?date=2017-09-20&floor=0
 
-        String modelString=BASE_URL+username+"/bookings/spots/"+spotNumber+"?date="+dateTime+"&floor="+floor;
+        String modelString = BASE_URL + username + "/bookings/spots/" + spotNumber + "?date=" + dateTime + "&floor=" + floor;
         Uri uri = Uri.parse(modelString).buildUpon().build();
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
 
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Accept-Encoding", "identity");
         connection.setRequestMethod("POST");
         connection.setConnectTimeout(1000000);
         connection.setReadTimeout(1000000);
@@ -92,11 +93,11 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
         this.date = date;
 
 
-       // Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("bookings").build();
+        // Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("bookings").build();
 
         dateTime = new SimpleDateFormat("yyyy-MM-dd").format(this.date);
 
-        String modelString=BASE_URL+username+"/bookings/spots/"+spotNumber+"?date="+dateTime+"&floor="+floor;
+        String modelString = BASE_URL + username + "/bookings/spots/" + spotNumber + "?date=" + dateTime + "&floor=" + floor;
         Uri uri = Uri.parse(modelString).buildUpon().build();
         this.execute(uri.toString());
     }

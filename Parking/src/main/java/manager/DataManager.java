@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class DataManager {
         return instance;
     }
 
+    private Date date;
     private DataManager() {
         Log.d("TAG", "DataManager()");
     }
@@ -93,6 +95,39 @@ public class DataManager {
         return user;
     }
 
+    public Vacancy parseVacancy(String inputJSON) {
+
+        Vacancy vacancy = new Vacancy();
+
+        try {
+            JSONObject jsonObject = new JSONObject(inputJSON);
+            Log.d("TAG", "jsonObject - " + String.valueOf(jsonObject));
+
+
+            String dateJson=jsonObject.getString("Date");
+            DateFormat df = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+            try {
+                date =  df.parse(dateJson);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            String vacatedAtJson=jsonObject.getString("vacatedAt");
+            DateFormat df2 = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+            try {
+                date =  df2.parse(vacatedAtJson);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            vacancy.setBookedBy(jsonObject.getString("username"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return vacancy;
+    }
+
 
     public List<Vacancy> parseVacancies(String inputJSON) {
 
@@ -107,10 +142,14 @@ public class DataManager {
 
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject spotObject = jsonObject.getJSONObject("spot");
+                Spot spot = new Spot(new Integer(spotObject.getInt("number")),spotObject.getInt("floor"));
+              //  spot.setSpotNumber(new Integer(spotObject.getInt("number")));
+               // spot.setFloor(spotObject.getInt("floor"));
                 Log.d("TAG", "JSONObject - " + String.valueOf(jsonObject));
+
                 Log.d("TAG", "spot - " + String.valueOf(spotObject));
 
-                vacancy.setSpotNumber(spotObject.getInt("number"));
+                vacancy.setSpot(spot);
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -130,6 +169,7 @@ public class DataManager {
                     e.printStackTrace();
                 }
 
+                //TODO de ce folosim doua tipuri de formatare a datei
                 SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
                 String dateTime1 = fmtOut.format(dateTime);
 
