@@ -115,40 +115,6 @@ public class DataManager {
         return user;
     }
 
-    public Vacancy parseVacancy(String inputJSON) {
-
-        Vacancy vacancy = new Vacancy();
-
-        try {
-            JSONObject jsonObject = new JSONObject(inputJSON);
-            Log.d("TAG", "jsonObject - " + String.valueOf(jsonObject));
-
-
-            String dateJson = jsonObject.getString("Date");
-            DateFormat df = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
-            try {
-                date = df.parse(dateJson);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            String vacatedAtJson = jsonObject.getString("vacatedAt");
-            DateFormat df2 = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
-            try {
-                date = df2.parse(vacatedAtJson);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            vacancy.setBookedBy(jsonObject.getString("username"));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return vacancy;
-    }
-
-
     public List<Vacancy> parseVacancies(String inputJSON) {
 
         ArrayList<Vacancy> vacancyList = new ArrayList<Vacancy>();
@@ -163,11 +129,6 @@ public class DataManager {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject spotObject = jsonObject.getJSONObject("spot");
                 Spot spot = new Spot(new Integer(spotObject.getInt("number")), spotObject.getInt("floor"));
-                //  spot.setSpotNumber(new Integer(spotObject.getInt("number")));
-                // spot.setFloor(spotObject.getInt("floor"));
-                Log.d("TAG", "JSONObject - " + String.valueOf(jsonObject));
-
-                Log.d("TAG", "spot - " + String.valueOf(spotObject));
 
                 vacancy.setSpot(spot);
 
@@ -177,11 +138,9 @@ public class DataManager {
                 calendar.set(Calendar.SECOND, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
 
-
                 String strDate = jsonObject.getString("date");
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date dateTime = null;
-
 
                 try {
                     dateTime = format.parse(strDate);
@@ -189,7 +148,6 @@ public class DataManager {
                     e.printStackTrace();
                 }
 
-                //TODO de ce folosim doua tipuri de formatare a datei
                 SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
                 String dateTime1 = fmtOut.format(dateTime);
 
@@ -199,38 +157,15 @@ public class DataManager {
                     e.printStackTrace();
                 }
 
-                Date vacatedAtdate = new Date();
-                Date bookedBydate = new Date();
+                //Date vacatedAtdate = new Date();
+                //Date bookedBydate = new Date();
 
-/*
-                try {
-                    dateTime = fmt.parse();
-                    vacatedAtdate = fmt.parse(String.valueOf(jsonObject.get("vacatedAt")));
-                    bookedBydate = fmt.parse(String.valueOf(jsonObject.get("bookedBy")));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                vacancy.setDate(bookedBydate);
-
-                if (calendar.getTime().after(vacatedAtdate) ){
-                    vacancy.setDate(vacatedAtdate);
-                }
-                else {
-                    Toast.makeText(context, "You cannot select a date before today :) ", Toast.LENGTH_SHORT).show();
-                }
-*/
                 //add object to list
                 vacancyList.add(vacancy);
             }
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return vacancyList;
     }
-
-
 }

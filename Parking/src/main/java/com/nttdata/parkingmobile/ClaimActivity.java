@@ -100,44 +100,18 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
                 for (Vacancy vacancySpotClaimed : vacancyList)
                     try {
-
-                        // spotNumber = vacancySpotClaimed.getSpot().getSpotNumber();
-                        //floor= vacancySpotClaimed.getSpot().getFloor();
-
-
-                        /*if (!selected.isEmpty() &&
-                                vacancySpotClaimed.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
-                              //  vacancySpotClaimed.getSpot().getSpotNumber() == Integer.parseInt(selected) &&
-                                vacancySpotClaimed.getSpot().getSpotNumber() == spotNumber &&
-                                vacancySpotClaimed.getBookedBy() == null) {
-                            vacancySpotClaimed.setBookedBy(username);
-                            Toast.makeText(ClaimActivity.this, "Your have booked spot number " + vacancySpotClaimed.getSpot().getSpotNumber() +
-                                    " on " + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
-                            // TODO aici trebuie sa fac claimTask pentru eliberarea locului rezervat din vacancyList
-
-                           // spotNumber = Integer.parseInt(selected);
-                            //floor= vacancySpotClaimed.getSpot().getFloor();
-
-                            ClaimTask claimTask = new ClaimTask(username, spotNumber, floor, dateTime);
-                            claimTask.setClaimDelegate((ClaimDelegate) claimActivity); //TODO cast la ClaimDelegate (posibil sa nu fie corect)
-
-                        }*/
                         if (!selected.isEmpty() &&
                                 vacancySpotClaimed.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
-                                //  vacancySpotClaimed.getSpot().getSpotNumber() == Integer.parseInt(selected) &&
                                 vacancySpotClaimed.getSpot().getSpotNumber() == spotClaimed.getSpotNumber() &&
                                 vacancySpotClaimed.getSpot().getFloor() == spotClaimed.getFloor() &&
                                 vacancySpotClaimed.getBookedBy() == null) {
+
                             vacancySpotClaimed.setBookedBy(username);
                             Toast.makeText(ClaimActivity.this, "Your have booked spot number " + vacancySpotClaimed.getSpot().getSpotNumber() +
                                     " on " + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
-                            // TODO aici trebuie sa fac claimTask pentru eliberarea locului rezervat din vacancyList
-
-                            // spotNumber = Integer.parseInt(selected);
-                            //floor= vacancySpotClaimed.getSpot().getFloor();
 
                             ClaimTask claimTask = new ClaimTask(username, spotClaimed.getSpotNumber(), spotClaimed.getFloor(), dateTime);
-                            claimTask.setClaimDelegate(claimActivity); //TODO cast la ClaimDelegate (posibil sa nu fie corect)
+                            claimTask.setClaimDelegate(claimActivity);
 
                             VacanciesTask vacanciesTask = new VacanciesTask(username, password, dateTime);
                             vacanciesTask.setVacanciesDelegate(claimActivity);
@@ -152,25 +126,19 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void registerClickCallBack() {
-
-        //String selectedItem;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!clickedClaim) {
                     selected = listSpotsVacanted.get(position);
                     Toast.makeText(ClaimActivity.this, "You chose: " + selected, Toast.LENGTH_LONG).show();
+
                     int indexStopNumber = selected.indexOf("at");
                     int indexStartFloor = selected.indexOf("r")+2;
-                    Log.d("TAG", "indexStopNumber: " + indexStopNumber);
-                    Log.d("TAG", "indexStartFloor: " + indexStartFloor);
                     int nrSpot = Integer.parseInt(selected.substring(6, indexStopNumber - 1));
-                    Log.d("TAG", "nrSpot: " + nrSpot);
-                    // int nrFloor = Integer.parseInt(selected.substring(indexStartFloor, selected.length()));
                     int nrFloor=Integer.parseInt(selected.charAt(selected.length()-1)+"");
-                    Log.d("TAG", "nrFloor: " + nrFloor);
-                    spotClaimed = new Spot(nrSpot, nrFloor);
 
+                    spotClaimed = new Spot(nrSpot, nrFloor);
 
                 } else
                     Toast.makeText(ClaimActivity.this, "You already booked a parking space!" +
@@ -199,7 +167,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                             txtSelectDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                             textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
 
-                            SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy"); //TODO
+                            SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
                             dateTime = new Date();
                             try {
@@ -219,25 +187,18 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
     public void addItemsOnListView() {
         btnClaim.setEnabled(true);
-        // listSpots = new ArrayList<String>();
-
-        // listSpots = new ArrayList<Spot>();
         listSpotsVacanted = new ArrayList<>();
         if (vacancyList.size() > 0) {
             for (Vacancy vacancySpot : vacancyList)
                 try {
-                    //new SimpleDateFormat("dd-MM-yyyy")
                     if (vacancySpot.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
                             vacancySpot.getBookedBy() == null) {
                         listSpotsVacanted.add("Spot #" + vacancySpot.getSpot().getSpotNumber() + " at floor " + vacancySpot.getSpot().getFloor());
-
-
                     }
 
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
 
             //Build adapter
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpotsVacanted);
@@ -262,7 +223,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     public void onVacanciesDone(String result) {
         Log.d("TAG", "VACANCIES DONE DELEGATE " + result);
         vacancyList = DataManager.getInstance().parseVacancies(result);
-
 
         DataManager.getInstance().setVacancyList(vacancyList);
 
