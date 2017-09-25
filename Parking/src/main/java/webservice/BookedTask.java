@@ -3,12 +3,9 @@ package webservice;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.nttdata.parkingmobile.ReleaseActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,9 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
-/**
- * Created by Raluca on 18.09.2017.
- */
 
 public class BookedTask extends AsyncTask<String, String, String> implements CredentialInterface {
 
