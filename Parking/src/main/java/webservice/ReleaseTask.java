@@ -17,6 +17,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import manager.DataManager;
+
 /**
  * Created by Raluca on 9/21/2017.
  */
@@ -48,7 +50,9 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
         dateTime = new SimpleDateFormat("yyyy-MM-dd").format(date);
         vacatedAtString = new SimpleDateFormat("yyyy-MM-dd").format(vacatedAt);
 
-        String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + vacatedAtString;
+        //String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + vacatedAtString;
+        String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + dateTime;
+
         Uri uri = Uri.parse(modelString).buildUpon().build();
 
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
@@ -63,9 +67,10 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
         object.put("username", username);
         // object.put("spotNumber", spotNumber);
 
-        object.put("date", date);
-        object.put("vacatedAt", vacatedAt);
+        object.put("date", dateTime);
+        object.put("vacatedAt", vacatedAtString);
 
+        connection.addRequestProperty("Authorization", DataManager.getInstance().getBaseAuthStr());
 
         OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
         out.write(object.toString());
@@ -73,7 +78,7 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
 
         StringBuilder sb = new StringBuilder();
         int httpResult = connection.getResponseCode();
-        if (httpResult == HttpURLConnection.HTTP_OK) {
+        if (httpResult == HttpURLConnection.HTTP_OK || httpResult==HttpURLConnection.HTTP_CREATED || httpResult==HttpURLConnection.HTTP_CLIENT_TIMEOUT) {
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
             String line = null;
             while ((line = br.readLine()) != null) {
@@ -97,7 +102,7 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
         dateTime = new SimpleDateFormat("yyyy-MM-dd").format(date);
         vacatedAtString = new SimpleDateFormat("yyyy-MM-dd").format(vacatedAt);
 
-        String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + vacatedAtString;
+        String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + dateTime;
         //Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath(username + "/vacancies/assigned?from=" + date + "&to=" + vacatedAt).build();
         Uri uri = Uri.parse(modelString).buildUpon().build();
 

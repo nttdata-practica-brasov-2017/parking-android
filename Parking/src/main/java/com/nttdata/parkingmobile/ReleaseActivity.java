@@ -89,8 +89,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 //vacancy.setSpotNumber(assignedSpot);
 
                 //set vacated date
-                //SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+                //SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                 //Date currentTime=Calendar.getInstance().getTime();
                 date = new Date();
 
@@ -101,6 +101,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+
+
                 // vacancy.setDate(vacatedDate);
 
                 // set vacated at
@@ -131,13 +133,13 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
                     releaseTask.setReleaseDelegate(releaseActivity);
 
-                    Toast.makeText(getApplicationContext(), "You have released spot number " + assignedSpot +
-                            " on " + fmt.format(vacancy.getDate()), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), "You have released spot number " + assignedSpot +
+                      //      " on " + fmt.format(vacancy.getDate()), Toast.LENGTH_SHORT).show();
 
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "Your spot number " + assignedSpot +
-                            " is already released on " + fmt.format(vacancy.getDate()), Toast.LENGTH_SHORT).show();
+               // } else
+                 //   Toast.makeText(getApplicationContext(), "Your spot number " + assignedSpot +
+                //            " is already released on " + fmt.format(vacancy.getDate()), Toast.LENGTH_SHORT).show();
 
                 }
             }

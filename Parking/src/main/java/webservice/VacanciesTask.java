@@ -5,8 +5,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +20,7 @@ import java.util.Date;
 
 import manager.DataManager;
 
-public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
+public class VacanciesTask extends AsyncTask<String, String, String> implements CredentialInterface {
 
     private VacanciesDelegate vacanciesDelegate;
     private String username;
@@ -39,21 +41,21 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
 
         //aici am modificat date, data pe care o preiau de a server
         //yyyy-MM-dd
-        String date= new SimpleDateFormat("yyyy-MM-dd").format(dateTime);
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(dateTime);
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").appendQueryParameter("date", date).build();
 
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
         connection.setRequestMethod("GET");
 
         connection.setUseCaches(false);
-       connection.setRequestProperty("User-Agent", "MyAgent");
+        connection.setRequestProperty("User-Agent", "MyAgent");
         connection.setConnectTimeout(30000);
         connection.setReadTimeout(30000);
 
-       // String baseAuthStr = username + ":" + password;
+        // String baseAuthStr = username + ":" + password;
         //connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
-         connection.addRequestProperty("Authorization", DataManager.getInstance().getBaseAuthStr());
-      //  connection.connect();
+        connection.addRequestProperty("Authorization", DataManager.getInstance().getBaseAuthStr());
+        //  connection.connect();
 
         StringBuilder sb = new StringBuilder();
         int httpResult = connection.getResponseCode();
@@ -90,7 +92,7 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
         super.onPostExecute(o);
         String response = String.valueOf(o);
 
-        if (vacanciesDelegate != null){
+        if (vacanciesDelegate != null) {
             vacanciesDelegate.onVacanciesDone(response);
         }
 
