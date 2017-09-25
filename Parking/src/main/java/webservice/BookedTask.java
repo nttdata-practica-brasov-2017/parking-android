@@ -16,13 +16,17 @@ import java.util.Date;
 
 
 public class BookedTask extends AsyncTask<String, String, String> implements CredentialInterface {
+    @Override
+    protected String doInBackground(String... params) {
+        return null;
+    }
 
-    private String username;
+   /* private String username;
     private int spotNumber;
     private int floor;
     private Date date;
 
-    private BookedDelegate delegate;
+   // private BookedDelegate delegate;
 
     @Override
     protected String doInBackground(String... params) {
@@ -100,5 +104,5 @@ public class BookedTask extends AsyncTask<String, String, String> implements Cre
     }
 
     public void setDelegate(ReleaseActivity releaseActivity) {
-    }
+    }*/
 }
