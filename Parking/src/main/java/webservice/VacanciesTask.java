@@ -16,6 +16,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import manager.DataManager;
+
 public class VacanciesTask  extends AsyncTask<String, String, String> implements CredentialInterface{
 
     private VacanciesDelegate vacanciesDelegate;
@@ -48,9 +50,9 @@ public class VacanciesTask  extends AsyncTask<String, String, String> implements
         connection.setConnectTimeout(30000);
         connection.setReadTimeout(30000);
 
-        String baseAuthStr = username + ":" + password;
-        connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
-
+       // String baseAuthStr = username + ":" + password;
+        //connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
+         connection.addRequestProperty("Authorization", DataManager.getInstance().getBaseAuthStr());
       //  connection.connect();
 
         StringBuilder sb = new StringBuilder();

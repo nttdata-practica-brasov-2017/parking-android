@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -78,7 +79,11 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         String response = String.valueOf(o);
 
         if (loginDelegate != null){
-            loginDelegate.onLoginDone(response);
+            try {
+                loginDelegate.onLoginDone(response);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
     }
 

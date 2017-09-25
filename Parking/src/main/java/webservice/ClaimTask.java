@@ -2,6 +2,7 @@ package webservice;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import manager.DataManager;
 
 /**
  * Created by Raluca on 9/22/2017.
@@ -65,13 +68,18 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
         object.put("floor", floor);
         object.put("date", dateTime);
 
+
+        //String baseAuthStr = username + ":" + password;
+        //connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
+        connection.addRequestProperty("Authorization", DataManager.getInstance().getBaseAuthStr());
+
         OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
         out.write(object.toString());
         out.close();
 
         StringBuilder sb = new StringBuilder();
         int httpResult = connection.getResponseCode();
-        if (httpResult == HttpURLConnection.HTTP_OK) {
+        if (httpResult == HttpURLConnection.HTTP_OK || httpResult==HttpURLConnection.HTTP_CREATED) {
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
             String line = null;
             while ((line = br.readLine()) != null) {

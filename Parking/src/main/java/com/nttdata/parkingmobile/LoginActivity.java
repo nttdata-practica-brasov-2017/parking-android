@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +13,17 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+
 import manager.DataManager;
 import model.Assignment;
 import model.User;
 import webservice.LoginDelegate;
 import webservice.LoginTask;
 
-public class LoginActivity extends Activity implements LoginDelegate{
+public class LoginActivity extends Activity implements LoginDelegate {
 
     private Button btnSignIn;
     private Button btnCancel;
@@ -45,9 +49,8 @@ public class LoginActivity extends Activity implements LoginDelegate{
         loginActivity = this;
 
         getLoginPreferences();
-        progressBarSpinner=(ProgressBar)findViewById(R.id.progressBar);
+        progressBarSpinner = (ProgressBar) findViewById(R.id.progressBar);
         progressBarSpinner.setVisibility(View.GONE);
-
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -143,14 +146,20 @@ public class LoginActivity extends Activity implements LoginDelegate{
 
 
     @Override
-    public void onLoginDone(String result) {
+    public void onLoginDone(String result) throws UnsupportedEncodingException {
 
-        Log.d("TAG" , "LOGIN DONE DELEGATE " + result);
-        if (!result.isEmpty()){
+        Log.d("TAG", "LOGIN DONE DELEGATE " + result);
+        if (!result.isEmpty()) {
             User user = DataManager.getInstance().parseUser(result);
+
+
+            String baseAuthStr = username + ":" + password;
+            String str = "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT);
+            DataManager.getInstance().setBaseAuthStr(str);
+
+
             startNewActivity(user);
-        } else
-        {
+        } else {
             Toast.makeText(getApplicationContext(), "Returned user is null", Toast.LENGTH_SHORT).show();
         }
 

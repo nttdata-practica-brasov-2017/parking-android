@@ -31,6 +31,7 @@ public class DataManager {
     }
 
     private Date date;
+
     private DataManager() {
         Log.d("TAG", "DataManager()");
     }
@@ -39,6 +40,25 @@ public class DataManager {
     private List<Assignment> assignmentList;
     private List<Spot> spotList;
     private List<Vacancy> vacancyList;
+    private String baseAuthStr;
+
+    public DataManager(Date date, List<User> userList, List<Assignment> assignmentList, List<Spot> spotList, List<Vacancy> vacancyList, String baseAuthStr, Context context) {
+        this.date = date;
+        this.userList = userList;
+        this.assignmentList = assignmentList;
+        this.spotList = spotList;
+        this.vacancyList = vacancyList;
+        this.baseAuthStr = baseAuthStr;
+        this.context = context;
+    }
+
+    public String getBaseAuthStr() {
+        return baseAuthStr;
+    }
+
+    public void setBaseAuthStr(String baseAuthStr) {
+        this.baseAuthStr = baseAuthStr;
+    }
 
     public List<User> getUserList() {
         return userList;
@@ -104,18 +124,18 @@ public class DataManager {
             Log.d("TAG", "jsonObject - " + String.valueOf(jsonObject));
 
 
-            String dateJson=jsonObject.getString("Date");
+            String dateJson = jsonObject.getString("Date");
             DateFormat df = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
             try {
-                date =  df.parse(dateJson);
+                date = df.parse(dateJson);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            String vacatedAtJson=jsonObject.getString("vacatedAt");
+            String vacatedAtJson = jsonObject.getString("vacatedAt");
             DateFormat df2 = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
             try {
-                date =  df2.parse(vacatedAtJson);
+                date = df2.parse(vacatedAtJson);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -142,9 +162,9 @@ public class DataManager {
 
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject spotObject = jsonObject.getJSONObject("spot");
-                Spot spot = new Spot(new Integer(spotObject.getInt("number")),spotObject.getInt("floor"));
-              //  spot.setSpotNumber(new Integer(spotObject.getInt("number")));
-               // spot.setFloor(spotObject.getInt("floor"));
+                Spot spot = new Spot(new Integer(spotObject.getInt("number")), spotObject.getInt("floor"));
+                //  spot.setSpotNumber(new Integer(spotObject.getInt("number")));
+                // spot.setFloor(spotObject.getInt("floor"));
                 Log.d("TAG", "JSONObject - " + String.valueOf(jsonObject));
 
                 Log.d("TAG", "spot - " + String.valueOf(spotObject));
