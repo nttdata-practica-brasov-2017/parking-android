@@ -38,9 +38,6 @@ public class VacanciesTask extends AsyncTask<String, String, String> implements 
     }
 
     private String callVacanciesService() throws IOException, JSONException {
-
-        //aici am modificat date, data pe care o preiau de a server
-        //yyyy-MM-dd
         String date = new SimpleDateFormat("yyyy-MM-dd").format(dateTime);
         Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("vacancies").appendQueryParameter("date", date).build();
 
@@ -52,10 +49,7 @@ public class VacanciesTask extends AsyncTask<String, String, String> implements 
         connection.setConnectTimeout(30000);
         connection.setReadTimeout(30000);
 
-        // String baseAuthStr = username + ":" + password;
-        //connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
         connection.addRequestProperty("Authorization", DataManager.getInstance().getBaseAuthStr());
-        //  connection.connect();
 
         StringBuilder sb = new StringBuilder();
         int httpResult = connection.getResponseCode();
@@ -70,9 +64,6 @@ public class VacanciesTask extends AsyncTask<String, String, String> implements 
         } else {
             System.out.println(connection.getResponseMessage());
         }
-
-        //connection.disconnect();
-
         return sb.toString();
     }
 
@@ -95,7 +86,6 @@ public class VacanciesTask extends AsyncTask<String, String, String> implements 
         if (vacanciesDelegate != null) {
             vacanciesDelegate.onVacanciesDone(response);
         }
-
     }
 
     public VacanciesDelegate getDelegate() {

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,10 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import manager.DataManager;
-
-/**
- * Created by Raluca on 9/22/2017.
- */
 
 public class ClaimTask extends AsyncTask<String, String, String> implements CredentialInterface {
 
@@ -45,12 +42,6 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
 
         dateTime = new SimpleDateFormat("yyyy-MM-dd").format(date);
 
-       /* Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("bookings").
-                appendQueryParameter("date", dateTime).
-                appendQueryParameter("spotNumber", String.valueOf(spotNumber)).
-                appendQueryParameter("floor", String.valueOf(floor)).build();*/
-        //  http://parking-parking.193b.starter-ca-central-1.openshiftapps.com/parking-backend/raluca/bookings/spots/6?date=2017-09-20&floor=0
-
         String modelString = BASE_URL + username + "/bookings/spots/" + spotNumber + "?date=" + dateTime + "&floor=" + floor;
         Uri uri = Uri.parse(modelString).buildUpon().build();
         HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
@@ -68,9 +59,6 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
         object.put("floor", floor);
         object.put("date", dateTime);
 
-
-        //String baseAuthStr = username + ":" + password;
-        //connection.addRequestProperty("Authorization", "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT));
         connection.addRequestProperty("Authorization", DataManager.getInstance().getBaseAuthStr());
 
         OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
@@ -79,17 +67,31 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
 
         StringBuilder sb = new StringBuilder();
         int httpResult = connection.getResponseCode();
-        if (httpResult == HttpURLConnection.HTTP_OK || httpResult==HttpURLConnection.HTTP_CREATED) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
+
+        if (httpResult == HttpURLConnection.HTTP_BAD_REQUEST ){
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"));
             String line = null;
             while ((line = br.readLine()) != null) {
                 sb.append(line + "\n");
             }
             br.close();
-            System.out.println("" + sb.toString());
-        } else {
-            System.out.println(connection.getResponseMessage());
+            return sb.toString();
+
+        }else{
+            if (httpResult == HttpURLConnection.HTTP_OK || httpResult==HttpURLConnection.HTTP_CREATED) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                br.close();
+                System.out.println("" + sb.toString());
+            } else {
+                System.out.println(connection.getResponseMessage());
+            }
         }
+
+
         return sb.toString();
     }
 
@@ -99,9 +101,6 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
         this.spotNumber = spotNumber;
         this.floor = floor;
         this.date = date;
-
-
-        // Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath("bookings").build();
 
         dateTime = new SimpleDateFormat("yyyy-MM-dd").format(this.date);
 
@@ -115,8 +114,22 @@ public class ClaimTask extends AsyncTask<String, String, String> implements Cred
         super.onPostExecute(o);
         String response = String.valueOf(o);
 
-        if (claimDelegate != null) {
-            claimDelegate.onClaimDone(response);
+        JSONObject jsonObject = null;
+        String errorMsg = null;
+        try {
+            jsonObject = new JSONObject(o);
+            errorMsg = jsonObject.getString("error");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (errorMsg == null || errorMsg.isEmpty()) {
+            if (claimDelegate != null) {
+                claimDelegate.onClaimDone(response);
+            }
+        }
+        else{
+            claimDelegate.onClaimError(errorMsg);
         }
     }
 

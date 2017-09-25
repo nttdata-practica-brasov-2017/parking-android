@@ -36,12 +36,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private int mYear;
     private int mMonth;
     private int mDay;
-    //private int spotNumber = 0;
-    //private int floor=-1;
     private Date date;
     private Date vacatedAt;
     private String username;
-    private int assignedSpot;
     private ReleaseActivity releaseActivity;
 
     @Override
@@ -60,14 +57,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         btnDatePicker.setOnClickListener(this);
 
         username = getIntent().getExtras().getString("username");
-        assignedSpot = getIntent().getExtras().getInt("assignedSpot");
 
         TextView textUser = (TextView) findViewById(R.id.textUser);
         textUser.setText("Welcome " + username + " !");
-
-
-        TextView textAssignedSpot = (TextView) findViewById(R.id.textAssignedSpot);
-        textAssignedSpot.setText(" Your assigned spot is " + assignedSpot);
 
         btnBack = (Button) findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -85,13 +77,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 Vacancy vacancy = new Vacancy();
-                // set assigned spot
-                //vacancy.setSpotNumber(assignedSpot);
-
-                //set vacated date
                 SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-                //SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-                //Date currentTime=Calendar.getInstance().getTime();
+
                 date = new Date();
 
                 try {
@@ -102,54 +89,15 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     e.printStackTrace();
                 }
 
-
-                // vacancy.setDate(vacatedDate);
-
-                // set vacated at
-                //vacatedAt = new Date();
                 vacatedAt=Calendar.getInstance().getTime();
-                String datetime = fmt.format(vacatedAt);
 
-               /* try {
-                    vacancy.setVacatedAt(fmt.parse(datetime));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }*/
+                ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
+                releaseTask.setReleaseDelegate(releaseActivity);
 
-                // set booked by
-                // vacancy.setBookedBy("");
-
-                Boolean alreadyReleased = false;
-
-              /*  for (Vacancy vacancyList : DataManager.getInstance().getVacancyList())
-                    if (vacancyList.getDate().equals(vacancy.getDate()) && vacancyList.getSpotNumber() == vacancy.getSpotNumber()) {
-                        alreadyReleased = true;
-                    }
-*/
-                if (!alreadyReleased) {
-                    //add to vacancyList
-                    //  DataManager.getInstance().getVacancyList().add(vacancy);
-
-                    ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
-                    releaseTask.setReleaseDelegate(releaseActivity);
-
-                   // Toast.makeText(getApplicationContext(), "You have released spot number " + assignedSpot +
-                      //      " on " + fmt.format(vacancy.getDate()), Toast.LENGTH_SHORT).show();
-
-
-               // } else
-                 //   Toast.makeText(getApplicationContext(), "Your spot number " + assignedSpot +
-                //            " is already released on " + fmt.format(vacancy.getDate()), Toast.LENGTH_SHORT).show();
-
-                }
+                Toast.makeText(getApplicationContext(), "You have released you spot on " + fmt.format(date), Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        // BookedTask bookedTask = new BookedTask(username, spotNumber, floor, date);
-        // bookedTask.setDelegate(releaseActivity);
     }
-
 
     //Date picker
     @TargetApi(Build.VERSION_CODES.N)
@@ -177,6 +125,5 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onReleaseDone(String result) {
-
     }
 }

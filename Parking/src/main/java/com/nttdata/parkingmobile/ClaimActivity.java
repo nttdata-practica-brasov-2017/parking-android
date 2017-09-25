@@ -113,8 +113,8 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                             ClaimTask claimTask = new ClaimTask(username, spotClaimed.getSpotNumber(), spotClaimed.getFloor(), dateTime);
                             claimTask.setClaimDelegate(claimActivity);
 
-                            VacanciesTask vacanciesTask = new VacanciesTask(username, password, dateTime);
-                            vacanciesTask.setVacanciesDelegate(claimActivity);
+                            //VacanciesTask vacanciesTask = new VacanciesTask(username, password, dateTime);
+                            //vacanciesTask.setVacanciesDelegate(claimActivity);
 
                         }
                     } catch (ParseException e) {
@@ -136,7 +136,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                     int indexStopNumber = selected.indexOf("at");
                     int indexStartFloor = selected.indexOf("r")+2;
                     int nrSpot = Integer.parseInt(selected.substring(6, indexStopNumber - 1));
-                    int nrFloor=Integer.parseInt(selected.charAt(selected.length()-1)+"");
+                    int nrFloor = Integer.parseInt(selected.charAt(selected.length()-1)+"");
 
                     spotClaimed = new Spot(nrSpot, nrFloor);
 
@@ -238,5 +238,10 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClaimDone(String result) {
 
+    }
+
+    @Override
+    public void onClaimError(String errorMsg) {
+        Toast.makeText(ClaimActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
     }
 }
