@@ -65,7 +65,6 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
 
         JSONObject object = new JSONObject();
         object.put("username", username);
-        // object.put("spotNumber", spotNumber);
 
         object.put("date", dateTime);
         object.put("vacatedAt", vacatedAtString);
@@ -95,7 +94,6 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
     public ReleaseTask(String username, Date date, Date vacatedAt) {
 
         this.username = username;
-        // this.spotNumber = spotNumber;
         this.date = date;
         this.vacatedAt = vacatedAt;
 
@@ -103,7 +101,6 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
         vacatedAtString = new SimpleDateFormat("yyyy-MM-dd").format(vacatedAt);
 
         String modelString = BASE_URL + username + "/vacancies/assigned?from=" + dateTime + "&to=" + dateTime;
-        //Uri uri = Uri.parse(BASE_URL).buildUpon().appendPath(username + "/vacancies/assigned?from=" + date + "&to=" + vacatedAt).build();
         Uri uri = Uri.parse(modelString).buildUpon().build();
 
         this.execute(uri.toString());
