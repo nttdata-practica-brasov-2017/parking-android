@@ -57,13 +57,18 @@ public class LoginActivity extends Activity implements LoginDelegate {
             @Override
             public void onClick(View v) {
 
-                progressBarSpinner.setVisibility(View.VISIBLE);
-
                 username = editTextUsername.getText().toString();
                 password = editTextPassword.getText().toString();
 
-                if (true) {
-                    if (checkBox_RememberMe.isChecked()) {
+                passwordSentToVacancy = password;
+                progressBarSpinner.setVisibility(View.VISIBLE);
+
+                LoginTask loginTask = new LoginTask(username, password);
+                loginTask.setLoginDelegate(loginActivity);
+
+                // de modificat if true cu result-ul care vine true sau error dupa logare
+                if (true ) {
+                    if (checkBox_RememberMe.isChecked() /*&& DataManager.getInstance().getResultError()!=null */) {
                         // remember username and password
                         loginPrefsEditor.putBoolean("saveLogin", true);
                         loginPrefsEditor.putString("username", username);
@@ -73,10 +78,12 @@ public class LoginActivity extends Activity implements LoginDelegate {
                         loginPrefsEditor.clear();
                         loginPrefsEditor.commit();
                     }
-                    passwordSentToVacancy = password;
 
-                    LoginTask loginTask = new LoginTask(username, password);
-                    loginTask.setLoginDelegate(loginActivity);
+                  //  passwordSentToVacancy = password;
+                    //progressBarSpinner.setVisibility(View.VISIBLE);
+
+                    //LoginTask loginTask = new LoginTask(username, password);
+                    //loginTask.setLoginDelegate(loginActivity);
 
                 } else {
                     if (username.length() == 0) {
@@ -89,6 +96,7 @@ public class LoginActivity extends Activity implements LoginDelegate {
                         Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_SHORT).show();
                     }
                 }
+
             }
         });
 
@@ -107,12 +115,18 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
         if (!user.getType().isEmpty() && user.getType().equals("PERMANENT")) {
             myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
+            //TODO trebuie sa accesez assignment pentru a afla numarul locului de parcare si etajul userului permanent pt a transmite mai departe pe claim activity
+            //  myIntent.putExtra("spotNumber", user.)
         } else {
             myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
         }
 
         myIntent.putExtra("username", user.getUsername());
         myIntent.putExtra("password", passwordSentToVacancy);
+
+
+        //to modify assigned spot
+        //myIntent.putExtra("assignedSpot", 1);
         startActivity(myIntent);
     }
 
@@ -123,6 +137,7 @@ public class LoginActivity extends Activity implements LoginDelegate {
         checkBox_RememberMe = (CheckBox) findViewById(R.id.rememberMe);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         btnCancel = (Button) findViewById(R.id.btnCancel);
+        //DataManager.getInstance().setResultError("e");
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
@@ -141,18 +156,24 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
         progressBarSpinner.setVisibility(View.INVISIBLE);
         Log.d("TAG", "LOGIN DONE DELEGATE " + result);
+
+        DataManager.getInstance().setResultError(result);
         if (!result.isEmpty()) {
             User user = DataManager.getInstance().parseUser(result);
+
+
             String baseAuthStr = username + ":" + password;
             String str = "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT);
             DataManager.getInstance().setBaseAuthStr(str);
+
+
             startNewActivity(user);
         } else {
-            Toast.makeText(getApplicationContext(), "Failed login!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Fail login", Toast.LENGTH_SHORT).show();
+
         }
     }
 
-    @Override
     public void onLoginError(String errorMsg) {
         Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
     }

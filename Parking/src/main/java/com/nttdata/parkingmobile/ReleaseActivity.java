@@ -47,6 +47,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         btnDatePicker = (Button) findViewById(R.id.btnSelectDate);
         txtDate = (EditText) findViewById(R.id.txtSelectDate);
         btnRelease = (Button) findViewById(R.id.btnRelease);
+        btnRelease.setVisibility(View.INVISIBLE);
 
         releaseActivity = this;
 
@@ -82,6 +83,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 } else {
                     Toast.makeText(getApplicationContext(), "Please select the date!", Toast.LENGTH_SHORT).show();
                 }
+                btnRelease.setText("RELEASED");
             }
         });
     }
@@ -91,7 +93,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == btnDatePicker) {
-
+            btnRelease.setText("Release");
             // Get Current Date
             final Calendar c = Calendar.getInstance();
             mYear = c.get(Calendar.YEAR);
@@ -104,6 +106,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                            btnRelease.setVisibility(View.VISIBLE);
+
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();

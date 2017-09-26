@@ -74,11 +74,13 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         btnSelectDate.setOnClickListener(this);
         txtSelectDate = (EditText) findViewById(R.id.txtSelectDate);
         btnClaim = (Button) findViewById(R.id.btnClaim);
+        btnClaim.setVisibility(View.INVISIBLE);
+       // btnClaim.setEnabled(true);
 
         textAvailableSpots = (TextView) findViewById(R.id.textAvailableSpots);
         listView = (ListView) findViewById(R.id.listView);
 
-        btnClaim.setEnabled(false);
+
 
         btnClaim.setOnClickListener(new View.OnClickListener() {
 
@@ -114,6 +116,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     Toast.makeText(ClaimActivity.this, "Please select the date!", Toast.LENGTH_SHORT).show();
                 }
+                btnClaim.setText("CLAIMED");
             }
         });
     }
@@ -159,6 +162,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             txtSelectDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                             SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+                            btnClaim.setVisibility(View.VISIBLE);
                             dateTime = new Date();
                             try {
                                 dateTime = fmt.parse(txtSelectDate.getText().toString());
@@ -176,6 +180,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                             } else {
                                 Toast.makeText(ClaimActivity.this, "There are no parking spots available for "
                                         + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                                btnClaim.setVisibility(View.INVISIBLE);
                                 btnClaim.setEnabled(false);
                             }
 
@@ -183,6 +188,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
         }
+
     }
 
     public void addItemsOnListView() {
