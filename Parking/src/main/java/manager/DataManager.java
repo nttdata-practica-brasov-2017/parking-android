@@ -148,7 +148,7 @@ public class DataManager {
                     e.printStackTrace();
                 }
 
-                SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat fmtOut = new SimpleDateFormat("dd MM yyyy");
                 String dateTime1 = fmtOut.format(dateTime);
 
                 try {

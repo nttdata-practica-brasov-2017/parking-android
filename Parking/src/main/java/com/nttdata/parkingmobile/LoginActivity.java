@@ -62,7 +62,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
                 username = editTextUsername.getText().toString();
                 password = editTextPassword.getText().toString();
 
-                // de modificat if true cu result-ul care vine true sau error dupa logare
                 if (true) {
                     if (checkBox_RememberMe.isChecked()) {
                         // remember username and password
@@ -74,7 +73,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
                         loginPrefsEditor.clear();
                         loginPrefsEditor.commit();
                     }
-
                     passwordSentToVacancy = password;
 
                     LoginTask loginTask = new LoginTask(username, password);
@@ -115,10 +113,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
         myIntent.putExtra("username", user.getUsername());
         myIntent.putExtra("password", passwordSentToVacancy);
-
-
-        //to modify assigned spot
-        //myIntent.putExtra("assignedSpot", 1);
         startActivity(myIntent);
     }
 
@@ -145,20 +139,17 @@ public class LoginActivity extends Activity implements LoginDelegate {
     @Override
     public void onLoginDone(String result) throws UnsupportedEncodingException {
 
+        progressBarSpinner.setVisibility(View.INVISIBLE);
         Log.d("TAG", "LOGIN DONE DELEGATE " + result);
         if (!result.isEmpty()) {
             User user = DataManager.getInstance().parseUser(result);
-
-
             String baseAuthStr = username + ":" + password;
             String str = "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT);
             DataManager.getInstance().setBaseAuthStr(str);
-
-
             startNewActivity(user);
         } else {
             Toast.makeText(getApplicationContext(), "Failed login!", Toast.LENGTH_SHORT).show();
-       }
+        }
     }
 
     @Override

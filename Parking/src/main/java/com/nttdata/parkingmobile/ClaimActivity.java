@@ -36,8 +36,6 @@ import webservice.VacanciesDelegate;
 import webservice.VacanciesTask;
 
 public class ClaimActivity extends AppCompatActivity implements View.OnClickListener, VacanciesDelegate , ClaimDelegate{
-
-    private Button btnBack;
     private Button btnSelectDate;
     private Button btnClaim;
     private EditText txtSelectDate;
@@ -60,7 +58,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     private List<Spot> spotsList;
     private Spot spotClaimed;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,20 +74,11 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         btnSelectDate.setOnClickListener(this);
         txtSelectDate = (EditText) findViewById(R.id.txtSelectDate);
         btnClaim = (Button) findViewById(R.id.btnClaim);
-        btnBack = (Button) findViewById(R.id.btnBack);
 
         textAvailableSpots = (TextView) findViewById(R.id.textAvailableSpots);
         listView = (ListView) findViewById(R.id.listView);
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start NewActivity.class
-                Intent myClaimIntent = new Intent(ClaimActivity.this, LoginActivity.class);
-                startActivity(myClaimIntent);
-            }
-        });
+        btnClaim.setEnabled(false);
 
         btnClaim.setOnClickListener(new View.OnClickListener() {
 
@@ -183,9 +171,12 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
                             if (vacancyList!= null) {
                                 textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
+                                btnClaim.setEnabled(true);
+
                             } else {
                                 Toast.makeText(ClaimActivity.this, "There are no parking spots available for "
                                         + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                                btnClaim.setEnabled(false);
                             }
 
                         }
@@ -195,7 +186,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void addItemsOnListView() {
-        btnClaim.setEnabled(true);
+        //btnClaim.setEnabled(true);
         listSpotsVacanted = new ArrayList<>();
         if (vacancyList.size() > 0) {
             for (Vacancy vacancySpot : vacancyList)

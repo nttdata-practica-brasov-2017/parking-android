@@ -26,7 +26,6 @@ import webservice.VacanciesTask;
 
 public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, ReleaseDelegate {
 
-    private Button btnBack;
     private Button btnRelease;
     private Button btnDatePicker;
     private EditText txtDate;
@@ -57,17 +56,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
         TextView textUser = (TextView) findViewById(R.id.textUser);
         textUser.setText("Welcome " + username + " !");
-
-        btnBack = (Button) findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start NewActivity.class
-                Intent myReleaseIntent = new Intent(ReleaseActivity.this, LoginActivity.class);
-                startActivity(myReleaseIntent);
-            }
-        });
 
         btnRelease.setOnClickListener(new View.OnClickListener() {
             @Override
