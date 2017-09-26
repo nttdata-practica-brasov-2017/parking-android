@@ -3,7 +3,6 @@ package com.nttdata.parkingmobile;
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +12,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 import manager.DataManager;
 import model.Vacancy;
 import webservice.BookedTask;
@@ -68,7 +65,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 // Start NewActivity.class
                 Intent myReleaseIntent = new Intent(ReleaseActivity.this, LoginActivity.class);
-
                 startActivity(myReleaseIntent);
             }
         });
@@ -78,23 +74,26 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 Vacancy vacancy = new Vacancy();
                 SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-
                 date = new Date();
 
                 try {
-                    date = fmt.parse(txtDate.getText().toString());
-
-
+                    if (!txtDate.getText().toString().isEmpty()) {
+                        date = fmt.parse(txtDate.getText().toString());
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-                vacatedAt=Calendar.getInstance().getTime();
+                if (!txtDate.getText().toString().isEmpty()) {
+                    vacatedAt = Calendar.getInstance().getTime();
 
-                ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
-                releaseTask.setReleaseDelegate(releaseActivity);
+                    ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
+                    releaseTask.setReleaseDelegate(releaseActivity);
 
-                Toast.makeText(getApplicationContext(), "You have released you spot on " + fmt.format(date), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "You have released you spot on " + fmt.format(date), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please select the date!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
