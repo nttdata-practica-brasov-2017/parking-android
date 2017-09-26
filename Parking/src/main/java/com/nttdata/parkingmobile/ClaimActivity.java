@@ -98,29 +98,34 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             public void onClick(View v) {
                 clickedClaim = true;
 
-                for (Vacancy vacancySpotClaimed : vacancyList)
-                    try {
-                        if (!selected.isEmpty() &&
-                                vacancySpotClaimed.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
-                                vacancySpotClaimed.getSpot().getSpotNumber() == spotClaimed.getSpotNumber() &&
-                                vacancySpotClaimed.getSpot().getFloor() == spotClaimed.getFloor() &&
-                                vacancySpotClaimed.getBookedBy() == null) {
+                if (vacancyList != null) {
+                    if (selected != null) {
+                        for (Vacancy vacancySpotClaimed : vacancyList) {
+                            try {
+                                if (!selected.isEmpty() && vacancyList.size() > 0 &&
+                                        vacancySpotClaimed.getDate().equals(new SimpleDateFormat("dd-MM-yyyy").parse(txtSelectDate.getText().toString())) &&
+                                        vacancySpotClaimed.getSpot().getSpotNumber() == spotClaimed.getSpotNumber() &&
+                                        vacancySpotClaimed.getSpot().getFloor() == spotClaimed.getFloor() &&
+                                        vacancySpotClaimed.getBookedBy() == null) {
 
-                            vacancySpotClaimed.setBookedBy(username);
-                            Toast.makeText(ClaimActivity.this, "Your have booked spot number " + vacancySpotClaimed.getSpot().getSpotNumber() +
-                                    " on " + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                                    vacancySpotClaimed.setBookedBy(username);
+                                    Toast.makeText(ClaimActivity.this, "Your have booked spot number " + vacancySpotClaimed.getSpot().getSpotNumber() +
+                                            " on " + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
 
-                            ClaimTask claimTask = new ClaimTask(username, spotClaimed.getSpotNumber(), spotClaimed.getFloor(), dateTime);
-                            claimTask.setClaimDelegate(claimActivity);
-
-                            //VacanciesTask vacanciesTask = new VacanciesTask(username, password, dateTime);
-                            //vacanciesTask.setVacanciesDelegate(claimActivity);
-
+                                    ClaimTask claimTask = new ClaimTask(username, spotClaimed.getSpotNumber(), spotClaimed.getFloor(), dateTime);
+                                    claimTask.setClaimDelegate(claimActivity);
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        addItemsOnListView();
+                    } else {
+                        Toast.makeText(ClaimActivity.this, "Please select the parking spot you want to book!", Toast.LENGTH_SHORT).show();
                     }
-                addItemsOnListView();
+                } else {
+                    Toast.makeText(ClaimActivity.this, "Please select the date!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -165,10 +170,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             txtSelectDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                            textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
-
                             SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-
                             dateTime = new Date();
                             try {
                                 dateTime = fmt.parse(txtSelectDate.getText().toString());
@@ -178,6 +180,13 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
                             VacanciesTask vacanciesTask = new VacanciesTask(username, password, dateTime);
                             vacanciesTask.setVacanciesDelegate(claimActivity);
+
+                            if (vacancyList!= null) {
+                                textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
+                            } else {
+                                Toast.makeText(ClaimActivity.this, "There are no parking spots available for "
+                                        + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                            }
 
                         }
                     }, mYear, mMonth, mDay);
@@ -237,7 +246,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClaimDone(String result) {
-
     }
 
     @Override

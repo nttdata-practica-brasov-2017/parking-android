@@ -91,7 +91,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
                         Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
         });
 
@@ -110,8 +109,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
         if (!user.getType().isEmpty() && user.getType().equals("PERMANENT")) {
             myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
-            //TODO trebuie sa accesez assignment pentru a afla numarul locului de parcare si etajul userului permanent pt a transmite mai departe pe claim activity
-            //  myIntent.putExtra("spotNumber", user.)
         } else {
             myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
         }
@@ -160,8 +157,12 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
             startNewActivity(user);
         } else {
-            Toast.makeText(getApplicationContext(), "Returned user is null", Toast.LENGTH_SHORT).show();
-        }
+            Toast.makeText(getApplicationContext(), "Failed login!", Toast.LENGTH_SHORT).show();
+       }
+    }
 
+    @Override
+    public void onLoginError(String errorMsg) {
+        Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
     }
 }

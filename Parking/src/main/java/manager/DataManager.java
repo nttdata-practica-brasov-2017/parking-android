@@ -156,10 +156,6 @@ public class DataManager {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-                //Date vacatedAtdate = new Date();
-                //Date bookedBydate = new Date();
-
                 //add object to list
                 vacancyList.add(vacancy);
             }

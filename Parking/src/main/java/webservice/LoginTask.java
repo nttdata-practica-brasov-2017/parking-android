@@ -78,11 +78,23 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         super.onPostExecute(o);
         String response = String.valueOf(o);
 
-        if (loginDelegate != null){
-            try {
-                loginDelegate.onLoginDone(response);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+        JSONObject jsonObject = null;
+        String errorMsg = null;
+        try {
+            jsonObject = new JSONObject(o);
+            errorMsg = jsonObject.getString("error");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (errorMsg == null || errorMsg.isEmpty()) {
+            if (loginDelegate != null) {
+                try {
+                    loginDelegate.onLoginDone(response);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                loginDelegate.onLoginError(errorMsg);
             }
         }
     }
