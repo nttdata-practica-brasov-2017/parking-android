@@ -105,6 +105,7 @@ public class LoginActivity extends Activity implements LoginDelegate {
             public void onClick(View v) {
                 editTextUsername.setText("");
                 editTextPassword.setText("");
+                progressBarSpinner.setVisibility(View.INVISIBLE);
             }
             //finish();
         });

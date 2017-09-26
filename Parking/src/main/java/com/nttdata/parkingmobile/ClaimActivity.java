@@ -114,6 +114,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                         Toast.makeText(ClaimActivity.this, "Please select the parking spot you want to book!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    btnClaim.setVisibility(View.INVISIBLE);
                     Toast.makeText(ClaimActivity.this, "Please select the date!", Toast.LENGTH_SHORT).show();
                 }
                 btnClaim.setText("CLAIMED");
@@ -175,11 +176,14 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
 
                             if (vacancyList!= null) {
                                 textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
+
+                                btnClaim.setVisibility(View.VISIBLE);
                                 btnClaim.setEnabled(true);
 
                             } else {
                                 Toast.makeText(ClaimActivity.this, "There are no parking spots available for "
                                         + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
+
                                 btnClaim.setVisibility(View.INVISIBLE);
                                 btnClaim.setEnabled(false);
                             }
@@ -209,6 +213,8 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             //Build adapter
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpotsVacanted);
             listView.setAdapter(adapter);
+            btnClaim.setVisibility(View.VISIBLE);
+            btnClaim.setEnabled(true);
 
             if (listSpotsVacanted.size() == 0 && !txtSelectDate.getText().toString().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "There are no other parking spots available on " +

@@ -114,7 +114,10 @@ public class ReleaseTask extends AsyncTask<String, String, String> implements Cr
         if (releaseDelegate != null) {
             releaseDelegate.onReleaseDone(response);
         }
-        
+        if (response==null){
+            releaseDelegate.onReleaseError(response);
+        }
+
     }
 
     public ReleaseDelegate getDelegate() {

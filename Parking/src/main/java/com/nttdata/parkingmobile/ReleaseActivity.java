@@ -117,4 +117,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onReleaseDone(String result) {
     }
+
+    @Override
+    public void onReleaseError(String response) {
+        Toast.makeText(getApplicationContext(), "You already reserved a spot!!", Toast.LENGTH_SHORT).show();
+    }
 }

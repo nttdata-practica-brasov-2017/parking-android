@@ -5,41 +5,44 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context="com.nttdata.parkingmobile.ClaimActivity">
+    tools:context="com.nttdata.parkingmobile.ClaimActivity"
+    android:background="@mipmap/blue">
 
     <TextView
         android:id="@+id/textUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
         android:ems="10"
+        android:gravity="center_vertical|center_horizontal|center"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp" />
 
 
     <EditText
+        android:id="@+id/txtSelectDate"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txtSelectDate"
-        android:layout_marginTop="79dp"
-        android:layout_below="@+id/textAssignedSpot"
+        android:layout_marginTop="40dp"
+        android:editable="false"
+        android:gravity="center"
+        android:layout_below="@+id/textView5"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:editable="false" />
+        android:layout_alignParentStart="true" />
 
     <Button
+        android:id="@+id/btnSelectDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SELECT DATE"
-        android:id="@+id/btnSelectDate"
-        android:layout_alignTop="@+id/txtSelectDate"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/txtSelectDate"
+        android:gravity="center"
+        android:text="SELECT DATE" />
 
     <TextView
         android:id="@+id/textAvailableSpots"
@@ -72,11 +75,25 @@
         android:id="@+id/btnClaim"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Claim"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="34dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="34dp"
+        android:foregroundGravity="center_horizontal"
+        android:text="Claim" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textUser"
+        android:layout_alignLeft="@+id/textUser"
+        android:layout_alignRight="@+id/textUser"
+        android:layout_alignStart="@+id/textUser"
+        android:layout_below="@+id/textUser"
+        android:layout_marginTop="27dp"
+        android:text="Please select date and spot for reservation"
+        android:textSize="18sp" />
 </RelativeLayout>

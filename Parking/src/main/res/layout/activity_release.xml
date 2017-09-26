@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context="com.nttdata.parkingmobile.ReleaseActivity">
+    tools:context="com.nttdata.parkingmobile.ReleaseActivity"
+    android:background="@mipmap/blue">
 
     <TextView
         android:id="@+id/textUser"
@@ -13,13 +14,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp" />
 
     <EditText
         android:layout_width="200dp"
@@ -46,15 +46,26 @@
         android:id="@+id/btnRelease"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/textUser"
-        android:layout_alignLeft="@+id/textUser"
-        android:layout_alignRight="@+id/textUser"
-        android:layout_alignStart="@+id/textUser"
-        android:layout_below="@+id/btnSelectDate"
-        android:layout_marginTop="106dp"
+        android:gravity="center_vertical|center_horizontal|center"
         android:text="Release"
         android:textAlignment="center"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/textUser"
+        android:layout_alignStart="@+id/textUser"
+        android:layout_marginBottom="149dp"
+        android:layout_alignRight="@+id/textUser"
+        android:layout_alignEnd="@+id/textUser" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please choose your date for release spot"
+        android:textSize="18sp"
+        android:layout_marginBottom="33dp"
+        android:layout_above="@+id/btnSelectDate"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -4,55 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context="com.nttdata.parkingmobile.LoginActivity">
+    tools:context="com.nttdata.parkingmobile.LoginActivity"
+    android:background="@mipmap/blue">
 
 
     <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="71dp"
+        android:layout_above="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp"
         android:ems="10"
-        android:hint ="Username"
-        android:focusable = "true"
-        android:inputType="textPersonName"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:focusable="true"
+        android:hint="Username"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint ="Password"
-        android:focusable = "true"
-        android:inputType="textPassword"
-        android:layout_marginTop="22dp"
-        android:layout_below="@+id/username"
+        android:layout_above="@+id/rememberMe"
         android:layout_alignLeft="@+id/username"
-        android:layout_alignStart="@+id/username" />
+        android:layout_alignStart="@+id/username"
+        android:layout_marginBottom="14dp"
+        android:ems="10"
+        android:focusable="true"
+        android:hint="Password"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/btnSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="98dp"
-        android:text="Sign In"
-        android:layout_below="@+id/password"
+        android:layout_above="@+id/progressBar"
         android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password" />
+        android:layout_alignStart="@+id/password"
+        android:layout_marginBottom="63dp"
+        android:text="Sign In" />
 
     <Button
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancel"
         android:layout_alignBaseline="@+id/btnSignIn"
         android:layout_alignBottom="@+id/btnSignIn"
+        android:layout_alignEnd="@+id/password"
         android:layout_alignRight="@+id/password"
-        android:layout_alignEnd="@+id/password" />
+        android:text="Cancel" />
 
     <CheckBox
         android:id="@+id/rememberMe"
@@ -69,7 +71,23 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnSignIn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="78dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="59dp"
+        android:layout_toEndOf="@+id/btnSignIn"
+        android:layout_toRightOf="@+id/btnSignIn" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/password"
+        android:layout_alignEnd="@+id/username"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignRight="@+id/username"
+        android:layout_alignStart="@+id/username"
+        android:layout_marginBottom="81dp"
+        android:gravity="center"
+        android:text="Parking Mobile"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp" />
 </RelativeLayout>
