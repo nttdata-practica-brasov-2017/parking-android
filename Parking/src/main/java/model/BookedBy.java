@@ -2,10 +2,6 @@ package model;
 
 import java.util.Date;
 
-/**
- * Created by Raluca on 18.09.2017.
- */
-
 public class BookedBy {
     private String username;
     private int spotNumber;

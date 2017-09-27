@@ -50,11 +50,11 @@
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btnSignIn"
         android:layout_alignBottom="@+id/btnSignIn"
         android:layout_alignEnd="@+id/password"
         android:layout_alignRight="@+id/password"
-        android:text="Cancel" />
+        android:text="Cancel"
+        android:layout_alignTop="@+id/btnSignIn" />
 
     <CheckBox
         android:id="@+id/rememberMe"
@@ -88,6 +88,6 @@
         android:layout_marginBottom="81dp"
         android:gravity="center"
         android:text="Parking Mobile"
-        android:textColor="@color/colorAccent"
+        android:textColor="@android:color/black"
         android:textSize="24sp" />
 </RelativeLayout>

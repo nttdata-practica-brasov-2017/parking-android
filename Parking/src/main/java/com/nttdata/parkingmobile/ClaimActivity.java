@@ -16,19 +16,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import manager.DataManager;
 import model.Spot;
 import model.User;
 import model.Vacancy;
-
 import webservice.ClaimDelegate;
 import webservice.ClaimTask;
 import webservice.LoginTask;
@@ -76,8 +73,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
         txtSelectDate = (EditText) findViewById(R.id.txtSelectDate);
         btnClaim = (Button) findViewById(R.id.btnClaim);
         btnClaim.setVisibility(View.INVISIBLE);
-        // btnClaim.setEnabled(true);
-
         textAvailableSpots = (TextView) findViewById(R.id.textAvailableSpots);
         listView = (ListView) findViewById(R.id.listView);
 
@@ -87,7 +82,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 clickedClaim = true;
-
                 if (vacancyList != null) {
                     if (selected != null) {
                         for (Vacancy vacancySpotClaimed : vacancyList) {
@@ -129,8 +123,7 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                 if (!clickedClaim) {
                     selected = listSpotsVacanted.get(position);
                     btnClaim.setEnabled(true);
-                    // Toast.makeText(ClaimActivity.this, "You chose: " + selected, Toast.LENGTH_LONG).show();
-                    btnClaim.setText("Claim " + selected);
+                    btnClaim.setText("CLAIM " + selected);
                     int indexStopNumber = selected.indexOf("at");
                     int indexStartFloor = selected.indexOf("r") + 2;
                     int nrSpot = Integer.parseInt(selected.substring(6, indexStopNumber - 1));
@@ -150,7 +143,6 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == btnSelectDate) {
-
             // Get Current Date
             final Calendar c = Calendar.getInstance();
             mYear = c.get(Calendar.YEAR);
@@ -172,18 +164,12 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
                             VacanciesTask vacanciesTask = new VacanciesTask(username, password, dateTime);
                             vacanciesTask.setVacanciesDelegate(claimActivity);
-
-
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
-
         }
-
-
     }
 
     public void addItemsOnListView() {
@@ -228,16 +214,11 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
     public void onVacanciesDone(String result) {
         Log.d("TAG", "VACANCIES DONE DELEGATE " + result);
         vacancyList = DataManager.getInstance().parseVacancies(result);
-
         DataManager.getInstance().setVacancyList(vacancyList);
 
         if (!vacancyList.isEmpty())
-        //daca username-ul logat se afla prin lista de Vacancy, se considera ca a rezervat deja acel loc si nu mai poate face alte actiuni
         {
             textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
-//
-//            btnClaim.setVisibility(View.VISIBLE);
-//            btnClaim.setEnabled(true);
             for (Vacancy v : vacancyList)
                 if (v.getBookedBy() != null && v.getBookedBy().equals(username))
                     clickedClaim = true;
@@ -248,25 +229,10 @@ public class ClaimActivity extends AppCompatActivity implements View.OnClickList
             listSpotsVacantedNO = new ArrayList<>();
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listSpotsVacantedNO);
             listView.setAdapter(adapter);
-            textAvailableSpots.setText("There are NO the available spots for " + txtSelectDate.getText().toString());
+            textAvailableSpots.setText("There are NO available spots for " + txtSelectDate.getText().toString());
             btnClaim.setText("Claim");
             btnClaim.setEnabled(false);
         }
-
-
-//        if (vacancyList != null) {
-//            textAvailableSpots.setText("Here are the available spots for " + txtSelectDate.getText().toString());
-//
-//            btnClaim.setVisibility(View.VISIBLE);
-//            btnClaim.setEnabled(true);
-//
-//        } else {
-//            Toast.makeText(ClaimActivity.this, "There are no parking spots available for "
-//                    + txtSelectDate.getText().toString(), Toast.LENGTH_SHORT).show();
-//
-//            btnClaim.setVisibility(View.INVISIBLE);
-//            btnClaim.setEnabled(false);
-//        }
     }
 
     @Override

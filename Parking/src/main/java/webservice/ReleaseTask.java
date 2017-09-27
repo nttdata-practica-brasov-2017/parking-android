@@ -19,10 +19,6 @@ import java.util.Date;
 
 import manager.DataManager;
 
-/**
- * Created by Raluca on 9/21/2017.
- */
-
 public class ReleaseTask extends AsyncTask<String, String, String> implements CredentialInterface {
     private ReleaseDelegate releaseDelegate;
     private String username;
