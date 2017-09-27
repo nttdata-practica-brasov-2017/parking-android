@@ -79,11 +79,13 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
                     releaseTask.setReleaseDelegate(releaseActivity);
 
-                    Toast.makeText(getApplicationContext(), "You have released you spot on " + fmt.format(date), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "You have released you spot on " + fmt.format(date), Toast.LENGTH_SHORT).show();
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Please select the date!", Toast.LENGTH_SHORT).show();
                 }
-                btnRelease.setText("RELEASED");
+                //btnRelease.setText("RELEASED");
+                btnRelease.setText("Released spot on "+fmt.format(date));
                 btnRelease.setEnabled(false);
             }
         });
@@ -94,7 +96,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == btnDatePicker) {
-            btnRelease.setText("Release");
+
+
             // Get Current Date
             final Calendar c = Calendar.getInstance();
             mYear = c.get(Calendar.YEAR);
@@ -107,7 +110,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                            btnRelease.setText("Release");
                             btnRelease.setVisibility(View.VISIBLE);
+                            btnRelease.setEnabled(true);
 
                         }
                     }, mYear, mMonth, mDay);
