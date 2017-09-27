@@ -68,16 +68,7 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
                 // de modificat if true cu result-ul care vine true sau error dupa logare
                 if (true ) {
-                    if (checkBox_RememberMe.isChecked() /*&& DataManager.getInstance().getResultError()!=null */) {
-                        // remember username and password
-                        loginPrefsEditor.putBoolean("saveLogin", true);
-                        loginPrefsEditor.putString("username", username);
-                        loginPrefsEditor.putString("password", password);
-                        loginPrefsEditor.commit();
-                    } else {
-                        loginPrefsEditor.clear();
-                        loginPrefsEditor.commit();
-                    }
+
 
                   //  passwordSentToVacancy = password;
                     //progressBarSpinner.setVisibility(View.VISIBLE);
@@ -158,7 +149,7 @@ public class LoginActivity extends Activity implements LoginDelegate {
         progressBarSpinner.setVisibility(View.INVISIBLE);
         Log.d("TAG", "LOGIN DONE DELEGATE " + result);
 
-        DataManager.getInstance().setResultError(result);
+
         if (!result.isEmpty()) {
             User user = DataManager.getInstance().parseUser(result);
 
@@ -168,14 +159,26 @@ public class LoginActivity extends Activity implements LoginDelegate {
             DataManager.getInstance().setBaseAuthStr(str);
 
 
+            if (checkBox_RememberMe.isChecked()) {
+                // remember username and password
+                loginPrefsEditor.putBoolean("saveLogin", true);
+                loginPrefsEditor.putString("username", username);
+                loginPrefsEditor.putString("password", password);
+                loginPrefsEditor.commit();
+
+            } else {
+                loginPrefsEditor.clear();
+                loginPrefsEditor.commit();
+            }
+
+
             startNewActivity(user);
         } else {
             Toast.makeText(getApplicationContext(), "Fail login", Toast.LENGTH_SHORT).show();
+          //  loginPrefsEditor.clear();
+            //loginPrefsEditor.commit();
 
         }
     }
 
-    public void onLoginError(String errorMsg) {
-        Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-    }
 }

@@ -41,7 +41,6 @@ public class DataManager {
     private List<Spot> spotList;
     private List<Vacancy> vacancyList;
     private String baseAuthStr;
-    private String resultError;
 
 
     public DataManager(Date date, List<User> userList, List<Assignment> assignmentList, List<Spot> spotList, List<Vacancy> vacancyList, String baseAuthStr, Context context) {
@@ -52,14 +51,6 @@ public class DataManager {
         this.vacancyList = vacancyList;
         this.baseAuthStr = baseAuthStr;
         this.context = context;
-    }
-
-    public String getResultError() {
-        return resultError;
-    }
-
-    public void setResultError(String resultError) {
-        this.resultError = resultError;
     }
 
     public String getBaseAuthStr() {

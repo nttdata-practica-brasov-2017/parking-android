@@ -84,6 +84,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(getApplicationContext(), "Please select the date!", Toast.LENGTH_SHORT).show();
                 }
                 btnRelease.setText("RELEASED");
+                btnRelease.setEnabled(false);
             }
         });
     }
