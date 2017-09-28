@@ -60,7 +60,6 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
             System.out.println("" + sb.toString());
         } else {
             return "";
-           // System.out.println(connection.getResponseMessage());
         }
         return sb.toString();
     }
@@ -80,7 +79,6 @@ public class LoginTask extends AsyncTask<String, String, String> implements Cred
         String response = String.valueOf(o);
 
         if (loginDelegate != null){
-
             try {
                 loginDelegate.onLoginDone(response);
             } catch (UnsupportedEncodingException e) {
