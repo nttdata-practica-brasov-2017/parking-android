@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -52,18 +53,21 @@ public class LoginActivity extends Activity implements LoginDelegate {
         progressBarSpinner = (ProgressBar) findViewById(R.id.progressBar);
         progressBarSpinner.setVisibility(View.GONE);
 
-
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = editTextUsername.getText().toString();
-                password = editTextPassword.getText().toString();
+                if (!isNetworkConnected()){
+                    Toast.makeText(LoginActivity.this, "Please check your internet connection!", Toast.LENGTH_SHORT).show();
+                } else {
+                    username = editTextUsername.getText().toString();
+                    password = editTextPassword.getText().toString();
 
-                passwordSentToVacancy = password;
-                progressBarSpinner.setVisibility(View.VISIBLE);
+                    passwordSentToVacancy = password;
+                    progressBarSpinner.setVisibility(View.VISIBLE);
 
-                LoginTask loginTask = new LoginTask(username, password);
-                loginTask.setLoginDelegate(loginActivity);
+                    LoginTask loginTask = new LoginTask(username, password);
+                    loginTask.setLoginDelegate(loginActivity);
+                }
             }
         });
 
@@ -109,6 +113,12 @@ public class LoginActivity extends Activity implements LoginDelegate {
             editTextPassword.setText(loginPreferences.getString("password", ""));
             checkBox_RememberMe.setChecked(true);
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
     @Override
