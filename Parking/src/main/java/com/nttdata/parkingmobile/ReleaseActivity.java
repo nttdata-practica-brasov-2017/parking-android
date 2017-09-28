@@ -79,13 +79,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     ReleaseTask releaseTask = new ReleaseTask(username, date, vacatedAt);
                     releaseTask.setReleaseDelegate(releaseActivity);
 
-                    //Toast.makeText(getApplicationContext(), "You have released you spot on " + fmt.format(date), Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(getApplicationContext(), "Please select the date!", Toast.LENGTH_SHORT).show();
                 }
-                //btnRelease.setText("RELEASED");
-                btnRelease.setText("Released spot on "+fmt.format(date));
+                btnRelease.setText("Spot was released on "+fmt.format(date));
                 btnRelease.setEnabled(false);
             }
         });

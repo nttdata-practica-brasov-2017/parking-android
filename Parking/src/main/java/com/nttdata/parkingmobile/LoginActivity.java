@@ -56,7 +56,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 username = editTextUsername.getText().toString();
                 password = editTextPassword.getText().toString();
 
@@ -65,29 +64,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
                 LoginTask loginTask = new LoginTask(username, password);
                 loginTask.setLoginDelegate(loginActivity);
-
-                // de modificat if true cu result-ul care vine true sau error dupa logare
-                if (true ) {
-
-
-                  //  passwordSentToVacancy = password;
-                    //progressBarSpinner.setVisibility(View.VISIBLE);
-
-                    //LoginTask loginTask = new LoginTask(username, password);
-                    //loginTask.setLoginDelegate(loginActivity);
-
-                } else {
-                    if (username.length() == 0) {
-                        Toast.makeText(getApplicationContext(), "Please enter your username", Toast.LENGTH_SHORT).show();
-                    }
-                    if (password.length() == 0) {
-                        Toast.makeText(getApplicationContext(), "Please enter the password", Toast.LENGTH_SHORT).show();
-                    }
-                    if (!username.equals("admin") || !password.equals("admin")) {
-                        Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
             }
         });
 
@@ -107,18 +83,12 @@ public class LoginActivity extends Activity implements LoginDelegate {
 
         if (!user.getType().isEmpty() && user.getType().equals("PERMANENT")) {
             myIntent = new Intent(LoginActivity.this, ReleaseActivity.class);
-            //TODO trebuie sa accesez assignment pentru a afla numarul locului de parcare si etajul userului permanent pt a transmite mai departe pe claim activity
-            //  myIntent.putExtra("spotNumber", user.)
         } else {
             myIntent = new Intent(LoginActivity.this, ClaimActivity.class);
         }
-
         myIntent.putExtra("username", user.getUsername());
         myIntent.putExtra("password", passwordSentToVacancy);
 
-
-        //to modify assigned spot
-        //myIntent.putExtra("assignedSpot", 1);
         startActivity(myIntent);
     }
 
@@ -129,7 +99,6 @@ public class LoginActivity extends Activity implements LoginDelegate {
         checkBox_RememberMe = (CheckBox) findViewById(R.id.rememberMe);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         btnCancel = (Button) findViewById(R.id.btnCancel);
-        //DataManager.getInstance().setResultError("e");
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
@@ -142,22 +111,18 @@ public class LoginActivity extends Activity implements LoginDelegate {
         }
     }
 
-
     @Override
     public void onLoginDone(String result) throws UnsupportedEncodingException {
 
         progressBarSpinner.setVisibility(View.INVISIBLE);
         Log.d("TAG", "LOGIN DONE DELEGATE " + result);
 
-
         if (!result.isEmpty()) {
             User user = DataManager.getInstance().parseUser(result);
-
 
             String baseAuthStr = username + ":" + password;
             String str = "Basic " + Base64.encodeToString(baseAuthStr.getBytes("UTF-8"), Base64.DEFAULT);
             DataManager.getInstance().setBaseAuthStr(str);
-
 
             if (checkBox_RememberMe.isChecked()) {
                 // remember username and password
@@ -170,14 +135,9 @@ public class LoginActivity extends Activity implements LoginDelegate {
                 loginPrefsEditor.clear();
                 loginPrefsEditor.commit();
             }
-
-
             startNewActivity(user);
         } else {
             Toast.makeText(getApplicationContext(), "Fail login", Toast.LENGTH_SHORT).show();
-          //  loginPrefsEditor.clear();
-            //loginPrefsEditor.commit();
-
         }
     }
 
